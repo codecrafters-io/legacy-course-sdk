@@ -1,4 +1,4 @@
-The entry point for your Redis implementation is in `{{{entry_point_file}}}`.
+The entry point for your {{course_short_name}} implementation is in `{{{entry_point_file}}}`.
 
 Study and uncomment the relevant code: 
 

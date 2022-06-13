@@ -36,6 +36,7 @@ class FirstStageExplanationsCompiler
     end
 
     File.write(explanation_file_path, Mustache.render(template_contents, {
+      course_short_name: @course.short_name,
       uncommented_code_blocks: blocks,
       entry_point_file: blocks.first[:file_path],
       language_syntax_highlighting_identifier: language.slug
