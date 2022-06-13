@@ -17,6 +17,7 @@ class Course
   def initialize(slug:, name:, short_name:, stages:)
     @slug = slug
     @name = name
+    @short_name = short_name
     @stages = stages
   end
 
