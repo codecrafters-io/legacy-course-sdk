@@ -112,7 +112,7 @@ jobs:
       - run: make download_testers
         working-directory: course_definition_tester
 
-      - run: bundle exec ruby tests/test_solutions.rb ${{matrix.language}}
+      - run: bundle exec ruby scripts/test_solutions.rb ${{matrix.language}}
         working-directory: course_definition_tester
 
 # TODO: Test GitHub actions matrix?
