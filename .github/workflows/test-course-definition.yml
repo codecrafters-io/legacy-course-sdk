@@ -90,7 +90,7 @@ jobs:
 #      - run: bundle config set --local without 'development'
 #      - run: bundle install
 #      - run: make download_starter_testers
-#      - run: bundle exec ruby tests/test_course.rb redis ${{matrix.language}}
+#      - run: bundle exec ruby tests/test_solutions.rb redis ${{matrix.language}}
 #
 #  docker:
 #    runs-on: ubuntu-latest
@@ -112,7 +112,7 @@ jobs:
 #      - run: bundle config set --local without 'development'
 #      - run: bundle install
 #      - run: make download_starter_testers
-#      - run: bundle exec ruby tests/test_course.rb docker ${{matrix.language}}
+#      - run: bundle exec ruby tests/test_solutions.rb docker ${{matrix.language}}
 #
 #  git:
 #    runs-on: ubuntu-latest
@@ -134,7 +134,7 @@ jobs:
 #      - run: bundle config set --local without 'development'
 #      - run: bundle install
 #      - run: make download_starter_testers
-#      - run: bundle exec ruby tests/test_course.rb git ${{matrix.language}}
+#      - run: bundle exec ruby tests/test_solutions.rb git ${{matrix.language}}
 #
 #  sqlite:
 #    runs-on: ubuntu-latest
@@ -156,7 +156,7 @@ jobs:
 #      - run: bundle config set --local without 'development'
 #      - run: bundle install
 #      - run: make download_starter_testers
-#      - run: bundle exec ruby tests/test_course.rb sqlite ${{matrix.language}}
+#      - run: bundle exec ruby tests/test_solutions.rb sqlite ${{matrix.language}}
 #
 #  react:
 #    runs-on: ubuntu-latest
@@ -178,4 +178,4 @@ jobs:
 #      - run: bundle config set --local without 'development'
 #      - run: bundle install
 #      - run: make download_starter_testers
-#      - run: bundle exec ruby tests/test_course.rb react ${{matrix.language}}
+#      - run: bundle exec ruby tests/test_solutions.rb react ${{matrix.language}}
