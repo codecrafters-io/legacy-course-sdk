@@ -1,9 +1,12 @@
+require "bundler"
+Bundler.require(:all)
+
 require "minitest/autorun"
 require "minitest/color"
 
 require_relative "../lib/uncommenter"
 
-SAMPLE_TWO_MARKERS_COMMENTED = """
+SAMPLE_TWO_MARKERS_COMMENTED = "
 a = b
 
 # Uncomment this to pass the first stage
@@ -15,9 +18,9 @@ a = b
 #
 # # Second uncommented block
 # c = d
-"""
+"
 
-SAMPLE_TWO_MARKERS_UNCOMMENTED = """
+SAMPLE_TWO_MARKERS_UNCOMMENTED = "
 a = b
 
 # Uncomment this to pass the first stage
@@ -29,9 +32,9 @@ b = c
 
 # Second uncommented block
 c = d
-"""
+"
 
-SAMPLE_PY_COMMENTED = """
+SAMPLE_PY_COMMENTED = "
 abcd = true
 
 # Uncomment this to pass the first stage
@@ -45,9 +48,9 @@ abcd = true
 # blah
 
 yay = true
-"""
+"
 
-SAMPLE_PY_UNCOMMENTED = """
+SAMPLE_PY_UNCOMMENTED = "
 abcd = true
 
 # Uncomment this to pass the first stage
@@ -61,9 +64,9 @@ if True:
 blah
 
 yay = true
-"""
+"
 
-SAMPLE_GO_COMMENTED = """
+SAMPLE_GO_COMMENTED = "
 func main() {
   // Uncomment this to pass the first stage
   //
@@ -74,9 +77,9 @@ func main() {
 
   a := 2
 }
-"""
+"
 
-SAMPLE_GO_UNCOMMENTED = """
+SAMPLE_GO_UNCOMMENTED = "
 func main() {
   // Uncomment this to pass the first stage
 
@@ -87,28 +90,27 @@ func main() {
 
   a := 2
 }
-"""
+"
 
-SAMPLE_HASKELL_COMMENTD = """
+SAMPLE_HASKELL_COMMENTD = "
 main = do
  -- Uncomment this to pass the first stage
  -- a <- readLine
  -- b <- readLine
  -- -- Nested Comment
  -- return (a + b)
-"""
+"
 
-
-SAMPLE_HASKELL_UNCOMMENTD = """
+SAMPLE_HASKELL_UNCOMMENTD = "
 main = do
  -- Uncomment this to pass the first stage
  a <- readLine
  b <- readLine
  -- Nested Comment
  return (a + b)
-"""
+"
 
-SAMPLE_JAVA_COMMENTED = """
+SAMPLE_JAVA_COMMENTED = "
 public static void main(String[] args) {
   // Uncomment this to pass the first stage
   //
@@ -119,9 +121,9 @@ public static void main(String[] args) {
 
   int b = 2;
 }
-"""
+"
 
-SAMPLE_JAVA_UNCOMMENTED = """
+SAMPLE_JAVA_UNCOMMENTED = "
 public static void main(String[] args) {
   // Uncomment this to pass the first stage
 
@@ -132,9 +134,9 @@ public static void main(String[] args) {
 
   int b = 2;
 }
-"""
+"
 
-SAMPLE_PHP_COMMENTED = """
+SAMPLE_PHP_COMMENTED = "
 <?php
 // Uncomment this to pass the first stage.
 // $a = 1;
@@ -142,9 +144,9 @@ SAMPLE_PHP_COMMENTED = """
 
 // echo $a + $b;
 ?>
-"""
+"
 
-SAMPLE_PHP_UNCOMMENTED = """
+SAMPLE_PHP_UNCOMMENTED = "
 <?php
 // Uncomment this to pass the first stage.
 $a = 1;
@@ -152,35 +154,35 @@ $b = 1;
 
 // echo $a + $b;
 ?>
-"""
+"
 
-SAMPLE_JAVASCRIPT_COMMENTED = """
+SAMPLE_JAVASCRIPT_COMMENTED = "
 // Uncomment this to pass the first stage
 // var a = 1;
 // var b = 2;
 // console.log(a + b);
-"""
+"
 
-SAMPLE_JAVASCRIPT_UNCOMMENTED = """
+SAMPLE_JAVASCRIPT_UNCOMMENTED = "
 // Uncomment this to pass the first stage
 var a = 1;
 var b = 2;
 console.log(a + b);
-"""
+"
 
-SAMPLE_CSHARP_COMMENTED = """
+SAMPLE_CSHARP_COMMENTED = "
 // Uncomment this to pass the first stage
 // var a = 1;
 // var b = 2;
 // Console.WriteLine(a + b);
-"""
+"
 
-SAMPLE_CSHARP_UNCOMMENTED = """
+SAMPLE_CSHARP_UNCOMMENTED = "
 // Uncomment this to pass the first stage
 var a = 1;
 var b = 2;
 Console.WriteLine(a + b);
-"""
+"
 
 UNCOMMENT_PATTERN = /Uncomment this/
 
