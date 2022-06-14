@@ -68,6 +68,40 @@ jobs:
       - run: npx prettier --check ../**/*.js
         working-directory: course_definition_tester
 
+  identify_language_slugs:
+    runs-on: ubuntu-latest
+    outputs:
+      language_slugs: ${{ steps.generate-language-slugs.outputs.language_slugs }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Generate Language Slugs
+        id: generate-language-slugs
+        run: |
+          LANGUAGE_SLUGS=$(ls solutions | xargs -I {} echo \"{}\" | jq -n '. |= [inputs]' | tr -d '\n')
+          echo ::set-output name=language_slugs::${LANGUAGE_SLUGS}
+
+  test_solutions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/checkout@v3
+        with:
+          repository: 'codecrafters-io/course-definition-tester'
+          path: 'course_definition_tester'
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - run: npm install
+        working-directory: course_definition_tester
+
+      - run: npx prettier --check ../**/*.js
+        working-directory: course_definition_tester
+
 # TODO: Test GitHub actions matrix?
 #
 #  redis:
