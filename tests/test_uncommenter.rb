@@ -1,5 +1,5 @@
-require "bundler"
-Bundler.require(:all)
+require "bundler/setup"
+Bundler.setup(:default, :development, :test)
 
 require "minitest/autorun"
 require "minitest/color"
