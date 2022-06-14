@@ -11,11 +11,13 @@ end
 class Course
   attr_reader :slug
   attr_reader :name
+  attr_reader :short_name
   attr_reader :stages
 
-  def initialize(slug:, name:, stages:)
+  def initialize(slug:, name:, short_name:, stages:)
     @slug = slug
     @name = name
+    @short_name = short_name
     @stages = stages
   end
 
@@ -28,6 +30,7 @@ class Course
 
     new(
       name: course_definition_yaml.fetch("name"),
+      short_name: course_definition_yaml.fetch("short_name"),
       slug: course_definition_yaml.fetch("slug"),
       stages: course_definition_yaml.fetch("stages").map { |stage_yaml| CourseStage.new(slug: stage_yaml.fetch("slug")) }
     )
