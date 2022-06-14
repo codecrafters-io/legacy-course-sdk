@@ -34,16 +34,18 @@ jobs:
       - run: git diff --exit-code # Changes to existing files
       - run: test -z "$(git ls-files compiled_starters/ --exclude-standard --others)" # Untracked files
 
-#  markdown_lint:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-ruby@v1
-#        with:
-#          ruby-version: '2.7'
-#      - run: gem install mdl
-#      - run: mdl --style relaxed compiled_starters
+  markdown_lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1' # Not needed with a .ruby-version file
+
+      - run: gem install mdl
+      - run: mdl --style relaxed compiled_starters
 #
 #  js_lint:
 #    runs-on: ubuntu-latest
