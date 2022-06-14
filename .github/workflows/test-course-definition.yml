@@ -68,18 +68,7 @@ jobs:
       - run: npx prettier --check ../**/*.js
         working-directory: course_definition_tester
 
-#
-#  other_tests:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/checkout@v2
-#      - uses: actions/setup-ruby@v1
-#        with:
-#          ruby-version: '2.7'
-#      - run: bundle install --verbose
-#      - run: ruby tests/test_uncommenter.rb
-#      - run: ruby tests/test_github_actions_matrix.rb
+# TODO: Test GitHub actions matrix?
 #
 #  redis:
 #    runs-on: ubuntu-latest
