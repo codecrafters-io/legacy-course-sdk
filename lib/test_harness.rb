@@ -1,4 +1,5 @@
 require "stringio"
+require "open3"
 
 class TestFailedError < StandardError
 end
