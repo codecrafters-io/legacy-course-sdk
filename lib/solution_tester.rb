@@ -32,7 +32,8 @@ class SolutionTester < TestHarness
         run_tests_for_stage(stage)
       }
 
-      log_success "- Took #{time_taken} secs"
+      log_success "Took #{time_taken} secs"
+      log_success("")
     end
   end
 
@@ -68,6 +69,10 @@ class SolutionTester < TestHarness
     "../dockerfiles/#{language_pack}-#{latest_version}.Dockerfile"
   end
 
+  def solution_code_dir_for_stage(stage)
+    "../solutions/#{@language.slug}/#{stage.slug}/code"
+  end
+
   def starter_dir
     "../compiled_starters/#{course.slug}-starter-#{language.slug}"
   end
@@ -87,7 +92,7 @@ class SolutionTester < TestHarness
     tmp_dir = Dir.mktmpdir
 
     `rm -rf #{tmp_dir}`
-    `cp -R #{File.expand_path(starter_dir)} #{tmp_dir}`
+    `cp -R #{File.expand_path(solution_code_dir_for_stage(stage))} #{tmp_dir}`
 
     command = [
       "docker run",
