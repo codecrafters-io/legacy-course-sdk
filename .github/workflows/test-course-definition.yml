@@ -108,8 +108,12 @@ jobs:
           working-directory: course_definition_tester
 
       - run: "echo ::remove-matcher owner=go::" # Messes with our output
+
       - run: make download_testers
+        working-directory: course_definition_tester
+
       - run: bundle exec ruby tests/test_solutions.rb ${{matrix.language}}
+        working-directory: course_definition_tester
 
 # TODO: Test GitHub actions matrix?
 #
