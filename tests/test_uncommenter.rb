@@ -23,12 +23,8 @@ a = b
 SAMPLE_TWO_MARKERS_UNCOMMENTED = "
 a = b
 
-# Uncomment this to pass the first stage
-
 # First uncommented block
 b = c
-
-# Uncomment this to pass the first stage
 
 # Second uncommented block
 c = d
@@ -52,8 +48,6 @@ yay = true
 
 SAMPLE_PY_UNCOMMENTED = "
 abcd = true
-
-# Uncomment this to pass the first stage
 
 # This is an assignment
 a = b
@@ -81,8 +75,6 @@ func main() {
 
 SAMPLE_GO_UNCOMMENTED = "
 func main() {
-  // Uncomment this to pass the first stage
-
   // This is an assignment
   a := 1
 
@@ -103,7 +95,6 @@ main = do
 
 SAMPLE_HASKELL_UNCOMMENTD = "
 main = do
- -- Uncomment this to pass the first stage
  a <- readLine
  b <- readLine
  -- Nested Comment
@@ -125,8 +116,6 @@ public static void main(String[] args) {
 
 SAMPLE_JAVA_UNCOMMENTED = "
 public static void main(String[] args) {
-  // Uncomment this to pass the first stage
-
   // This is an assignment
   int a = 1;
 
@@ -148,7 +137,6 @@ SAMPLE_PHP_COMMENTED = "
 
 SAMPLE_PHP_UNCOMMENTED = "
 <?php
-// Uncomment this to pass the first stage.
 $a = 1;
 $b = 1;
 
@@ -164,7 +152,6 @@ SAMPLE_JAVASCRIPT_COMMENTED = "
 "
 
 SAMPLE_JAVASCRIPT_UNCOMMENTED = "
-// Uncomment this to pass the first stage
 var a = 1;
 var b = 2;
 console.log(a + b);
@@ -178,7 +165,6 @@ SAMPLE_CSHARP_COMMENTED = "
 "
 
 SAMPLE_CSHARP_UNCOMMENTED = "
-// Uncomment this to pass the first stage
 var a = 1;
 var b = 2;
 Console.WriteLine(a + b);
