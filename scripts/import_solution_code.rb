@@ -2,6 +2,8 @@
 # Example: ruby scripts/import_solution_code.rb python 2 /tmp/codecrafters-redis-python
 require_relative "../lib/models"
 
+require "fileutils"
+
 language_slug = ARGV[0]
 stage_number = Integer(ARGV[1])
 reference_solution_directory = ARGV[2]
