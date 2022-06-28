@@ -39,6 +39,7 @@ class StarterRepoTester < TestHarness
         log_error("Are you sure there's a contiguous block of comments after the 'Uncomment this' marker?")
         return
       end
+
       puts ""
       puts diff.to_s(:color)
       puts ""

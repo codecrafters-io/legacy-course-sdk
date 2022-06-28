@@ -43,9 +43,9 @@ class FirstStageSolutionsCompiler
         exit(1)
       end
 
-      puts ""
-      puts diff.to_s(:color)
-      puts ""
+      # puts ""
+      # puts diff.to_s(:color)
+      # puts ""
     end
   end
 

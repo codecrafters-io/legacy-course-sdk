@@ -54,9 +54,9 @@ class FirstStageExplanationsCompiler
         exit(1)
       end
 
-      puts ""
-      puts blocks.inspect
-      puts ""
+      # puts ""
+      # puts blocks.inspect
+      # puts ""
     end
   end
 
