@@ -7,9 +7,10 @@ class SolutionTester < TestHarness
 
   attr_reader :course, :language
 
-  def initialize(course, language)
+  def initialize(course, language, stage_slugs)
     @course = course
     @language = language
+    @stage_slugs = stage_slugs
   end
 
   def do_test
@@ -23,6 +24,11 @@ class SolutionTester < TestHarness
     @course.stages.each do |stage|
       unless solution_exists_for_stage?(stage)
         log_info "Skipping stage #{stage.slug} because no solution exists"
+        next
+      end
+
+      unless @stage_slugs.include?(stage.slug)
+        log_info "Skipping stage #{stage.slug} because we're only running tests for #{@stage_slugs}"
         next
       end
 

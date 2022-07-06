@@ -5,10 +5,17 @@ ENV["DOCKER_BUILDKIT"] = "0"
 require_relative "../lib/solution_tester"
 require_relative "../lib/models"
 
+course = Course.load_from_file("../course-definition.yml")
+
 language_slug = ARGV[0]
 
-course = Course.load_from_file("../course-definition.yml")
+stage_slugs = if ARGV[1]
+  ARGV[1].split(",")
+else
+  course.stages.map(&:slug)
+end
+
 language = Language.find_by_slug!(language_slug)
 
-tester = SolutionTester.new(course, language)
+tester = SolutionTester.new(course, language, stage_slugs)
 tester.test || exit(1)
