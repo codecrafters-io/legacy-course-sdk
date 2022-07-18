@@ -19,23 +19,26 @@ class FirstStageSolutionDefinitionsCompiler
 
   def compile_for_solution_directory(solution_directory)
     language = Language.find_by_slug!(File.basename(File.dirname(solution_directory)))
-    definition_file_path = File.join(File.dirname(solution_directory), "definition.yml")
+    stage = @course.stages.detect { |stage| stage.slug.eql?(File.basename(solution_directory)) }
+    definition_file_path = File.join(solution_directory, "definition.yml")
+
+    puts "- Compiling solution definitions for #{@course.slug} (#{language.slug}, #{stage.slug})..."
 
     File.delete(definition_file_path) if File.exist?(definition_file_path)
 
     File.write(definition_file_path, YAML.dump(
-      author_details: {
-        name: 'Paul Kuruvilla',
-        profileUrl: 'https://github.com/rohitpaulk',
-        avatarUrl: 'https://github.com/rohitpaulk.png',
-        headline: 'CTO, CodeCrafters',
+      "author_details" => {
+        "name" => 'Paul Kuruvilla',
+        "profile_url" => 'https://github.com/rohitpaulk',
+        "avatar_url" => 'https://github.com/rohitpaulk.png',
+        "headline" => 'CTO, CodeCrafters',
       },
-      reviewers_details: [
+      "reviewers_details" => [
         {
-          name: 'Marcos Lilljedahl',
-          profileUrl: 'https://www.docker.com/captains/marcos-lilljedahl/',
-          avatarUrl: 'https://github.com/marcosnils.png',
-          headline: 'Docker Contributor',
+          "name" => 'Marcos Lilljedahl',
+          "profile_url" => 'https://www.docker.com/captains/marcos-lilljedahl/',
+          "avatar_url" => 'https://github.com/marcosnils.png',
+          "headline" => 'Docker Contributor',
         }
       ]
     ))
@@ -60,6 +63,6 @@ class FirstStageSolutionDefinitionsCompiler
 
   # For now, we're compiling for _all_ stages - in the future only do for first, manually manage others.
   def solution_directories
-    Dir.glob(File.join(@solutions_directory, "*", "*"))
+    Dir.glob(File.join(@solutions_directory, "*", "*", "code")).map { |path| File.dirname(path) }
   end
 end
