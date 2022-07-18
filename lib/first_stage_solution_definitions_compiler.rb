@@ -5,7 +5,7 @@ require_relative "../lib/models"
 require_relative "../lib/starter_code_uncommenter"
 require_relative "../lib/unindenter"
 
-class SolutionDefinitionsCompiler
+class FirstStageSolutionDefinitionsCompiler
   def initialize(course:, solutions_directory:)
     @course = course
     @solutions_directory = solutions_directory
@@ -18,8 +18,8 @@ class SolutionDefinitionsCompiler
   end
 
   def compile_for_solution_directory(solution_directory)
-    language = Language.find_by_slug!(File.basename(solution_directory))
-    definition_file_path = File.join(@solutions_directory, language.slug, @course.first_stage.slug, "explanation.md")
+    language = Language.find_by_slug!(File.basename(File.dirname(solution_directory)))
+    definition_file_path = File.join(File.dirname(solution_directory), "definition.yml")
 
     File.delete(definition_file_path) if File.exist?(definition_file_path)
 
@@ -58,6 +58,7 @@ class SolutionDefinitionsCompiler
     end
   end
 
+  # For now, we're compiling for _all_ stages - in the future only do for first, manually manage others.
   def solution_directories
     Dir.glob(File.join(@solutions_directory, "*", "*"))
   end
