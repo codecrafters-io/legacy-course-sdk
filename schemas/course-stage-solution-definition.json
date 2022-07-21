@@ -43,7 +43,11 @@
           "required": ["name", "profile_url", "avatar_url", "headline"]
         }
       }
+    },
+    "pull_request_url": {
+      "type": "string"
     }
   },
+  "additionalProperties": false,
   "required": ["author_details"]
 }
