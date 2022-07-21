@@ -16,6 +16,7 @@ COMMENTED_DEFINITION_FILE_CONTENTS = <<~EOF
   #  profile_url: https://www.docker.com/captains/marcos-lilljedahl/
   #  avatar_url: https://github.com/marcosnils.png
   #  headline: Docker Contributor
+  #pull_request_url: "https://github.com/codecrafters-io/build-your-own-<course>/pull/<number>"
 EOF
 
 class SolutionDefinitionsCompiler
