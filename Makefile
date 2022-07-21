@@ -10,7 +10,7 @@ latest_git_tester_version = $(shell curl $(git_tester_api_url) | jq -r ".tag_nam
 #latest_react_tester_version = $(shell curl $(react_tester_api_url) | jq -r ".tag_name")
 latest_sqlite_tester_version = $(shell curl $(sqlite_tester_api_url) | jq -r ".tag_name")
 
-compile: compile_starters compile_first_stage_solutions compile_solution_diffs
+compile: compile_starters compile_first_stage_solutions compile_solution_diffs compile_solution_definitions
 
 compile_starters:
 	rm -rf ../compiled_starters/*
@@ -18,6 +18,9 @@ compile_starters:
 
 compile_first_stage_solutions:
 	bundle exec ruby scripts/compile_first_stage_solutions.rb
+
+compile_solution_definitions:
+	bundle exec ruby scripts/compile_solution_definitions.rb
 
 compile_solution_diffs:
 	bundle exec ruby scripts/compile_solution_diffs.rb

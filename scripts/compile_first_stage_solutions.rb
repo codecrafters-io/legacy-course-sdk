@@ -1,6 +1,5 @@
 require_relative "../lib/first_stage_solutions_compiler"
 require_relative "../lib/first_stage_explanations_compiler"
-require_relative "../lib/first_stage_solution_definitions_compiler"
 
 solutions_compiler = FirstStageSolutionsCompiler.new(
   course: Course.load_from_file("../course-definition.yml"),
