@@ -6,11 +6,11 @@ require_relative "../lib/starter_code_uncommenter"
 require_relative "../lib/unindenter"
 
 COMMENTED_DEFINITION_FILE_CONTENTS = <<~EOF
-  #author_details:
-  #  name: Paul Kuruvilla
-  #  profile_url: https://github.com/rohitpaulk
-  #  avatar_url: https://github.com/rohitpaulk.png
-  #  headline: CTO, CodeCrafters
+  author_details:
+    name: Paul Kuruvilla
+    profile_url: https://github.com/rohitpaulk
+    avatar_url: https://github.com/rohitpaulk.png
+    headline: CTO, CodeCrafters
   #reviewers_details:
   #- name: Marcos Lilljedahl
   #  profile_url: https://www.docker.com/captains/marcos-lilljedahl/
