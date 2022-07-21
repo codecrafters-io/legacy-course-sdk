@@ -39,9 +39,9 @@
           },
           "headline": {
             "type": "string"
-          },
-          "required": ["name", "profile_url", "avatar_url", "headline"]
-        }
+          }
+        },
+        "required": ["name", "profile_url", "avatar_url", "headline"]
       }
     },
     "pull_request_url": {

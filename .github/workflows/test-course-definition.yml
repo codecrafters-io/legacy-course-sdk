@@ -136,8 +136,5 @@ jobs:
       - run: npm install
         working-directory: course_definition_tester
 
-      - run: npx ajv validate --spec draft2020 -s schemas/course-definition.json -d ../course-definition.yml
-        working-directory: course_definition_tester
-
-      - run: ls ../solutions/*/*/definition.yml | xargs -n 1 npx ajv validate --spec draft2020 -s schemas/course-stage-solution-definition.json -d
+      - run: make validate_schemas
         working-directory: course_definition_tester
