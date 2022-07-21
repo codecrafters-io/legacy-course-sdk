@@ -1,3 +1,5 @@
+require_relative "../lib/models"
+
 # Generates pull requests for expert reviewers based on existing content
 class PullRequestGenerator
   def initialize(course:, solutions_directory:)
@@ -15,14 +17,14 @@ class PullRequestGenerator
 
   def generate_for_solution_directory(solution_directory)
     solution_definition_contents = File.read(File.join(solution_directory, "definition.yml"))
-    solution_definition = YAML.load(solution_definition_contents)
 
-    if solution_definition_yaml["pull_request_url"]
+    if YAML.load(solution_definition_contents)["pull_request_url"]
       puts "Skipped #{solution_directory} because it already has a pull request"
     end
 
     pull_request_url = "abcd"
     solution_definition_contents.gsub!(/#pull_request_url: .*/, "pull_request_url: #{pull_request_url}")
+    File.write(File.join(solution_directory, "definition.yml"), solution_definition_contents)
     return
 
     language = Language.find_by_slug!(File.basename(File.dirname(solution_directory)))
