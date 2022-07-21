@@ -21,15 +21,16 @@ class PullRequestGenerator
     if YAML.load(solution_definition_contents)["pull_request_url"]
       puts "Skipped #{solution_directory} because it already has a pull request"
     end
+    
+    language = Language.find_by_slug!(File.basename(File.dirname(solution_directory)))
+    stage = @course.stages.detect { |stage| stage.slug.eql?(File.basename(solution_directory)) }
+    definition_file_path = File.join(solution_directory, "definition.yml")
+
 
     pull_request_url = "abcd"
     solution_definition_contents.gsub!(/#pull_request_url: .*/, "pull_request_url: #{pull_request_url}")
     File.write(File.join(solution_directory, "definition.yml"), solution_definition_contents)
     return
-
-    language = Language.find_by_slug!(File.basename(File.dirname(solution_directory)))
-    stage = @course.stages.detect { |stage| stage.slug.eql?(File.basename(solution_directory)) }
-    definition_file_path = File.join(solution_directory, "definition.yml")
 
     unless File.exist?(definition_file_path)
       puts "- Adding commented solution definition for #{@course.slug} (#{language.slug}, #{stage.slug})..."

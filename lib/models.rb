@@ -3,8 +3,10 @@ require "yaml"
 class CourseStage
   attr_reader :slug
 
-  def initialize(slug:)
+  def initialize(slug:, number:, name:)
     @slug = slug
+    @number = number
+    @name = name
   end
 end
 
@@ -32,7 +34,9 @@ class Course
       name: course_definition_yaml.fetch("name"),
       short_name: course_definition_yaml.fetch("short_name"),
       slug: course_definition_yaml.fetch("slug"),
-      stages: course_definition_yaml.fetch("stages").map { |stage_yaml| CourseStage.new(slug: stage_yaml.fetch("slug")) }
+      stages: course_definition_yaml.fetch("stages").each_with_index.map { |stage_yaml, stage_index|
+        CourseStage.new(slug: stage_yaml.fetch("slug"), number: stage_index + 1, name: stage_yaml.fetch("name"))
+      }
     )
   end
 end
