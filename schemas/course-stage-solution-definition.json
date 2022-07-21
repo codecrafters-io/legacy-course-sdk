@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codecrafters.io/course-stage-solution-definition.schema.json",
+  "title": "CodeCrafters Course Stage Solution Definition",
+  "description": "Schema for a CodeCrafters course stage solution definition",
+  "type": "object",
+  "properties": {
+    "author_details": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "profile_url": {
+          "type": "string"
+        },
+        "avatar_url": {
+          "type": "string"
+        },
+        "headline": {
+          "type": "string"
+        }
+      }
+    },
+    "reviewers_details": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "profile_url": {
+            "type": "string"
+          },
+          "avatar_url": {
+            "type": "string"
+          },
+          "headline": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": ["author_details"]
+}
