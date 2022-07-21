@@ -20,7 +20,8 @@
         "headline": {
           "type": "string"
         }
-      }
+      },
+      "required": ["name", "profile_url", "avatar_url", "headline"]
     },
     "reviewers_details": {
       "type": "array",
@@ -38,7 +39,8 @@
           },
           "headline": {
             "type": "string"
-          }
+          },
+          "required": ["name", "profile_url", "avatar_url", "headline"]
         }
       }
     }
