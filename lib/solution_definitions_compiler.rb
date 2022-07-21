@@ -37,7 +37,7 @@ class SolutionDefinitionsCompiler
     stage = @course.stages.detect { |stage| stage.slug.eql?(File.basename(solution_directory)) }
     definition_file_path = File.join(solution_directory, "definition.yml")
 
-    unless File.exist?("definition.yml")
+    unless File.exist?(definition_file_path)
       puts "- Adding commented solution definition for #{@course.slug} (#{language.slug}, #{stage.slug})..."
       File.write(definition_file_path, COMMENTED_DEFINITION_FILE_CONTENTS)
     end
