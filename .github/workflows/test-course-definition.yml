@@ -114,3 +114,27 @@ jobs:
 
       - run: bundle exec ruby scripts/test_solutions.rb ${{matrix.language}}
         working-directory: course_definition_tester
+
+  validate-schemas:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/checkout@v3
+        with:
+          repository: 'codecrafters-io/course-definition-tester'
+          path: 'course_definition_tester'
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - run: npm install
+        working-directory: course_definition_tester
+
+      - run: npm install
+        working-directory: course_definition_tester
+
+      - run: npx ajv validate --spec draft2020 -s schemas/course-definition.json -d ../course-definition.yml
+        working-directory: course_definition_tester
