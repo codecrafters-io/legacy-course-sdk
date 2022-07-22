@@ -22,6 +22,7 @@ class PullRequestGenerator
 
     if YAML.load(solution_definition_contents)["pull_request_url"]
       puts "Skipped #{solution_directory} because it already has a pull request"
+      return
     end
 
     language = Language.find_by_slug!(File.basename(File.dirname(solution_directory)))
