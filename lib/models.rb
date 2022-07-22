@@ -2,6 +2,8 @@ require "yaml"
 
 class CourseStage
   attr_reader :slug
+  attr_reader :number
+  attr_reader :name
 
   def initialize(slug:, number:, name:)
     @slug = slug

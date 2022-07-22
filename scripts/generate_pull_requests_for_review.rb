@@ -1,4 +1,6 @@
 require_relative "../lib/models"
+require "octokit"
+require "tmpdir"
 
 # Generates pull requests for expert reviewers based on existing content
 class PullRequestGenerator
@@ -28,43 +30,28 @@ class PullRequestGenerator
 
     github_repo_name = "codecrafters-io/#{File.basename(File.dirname(Dir.pwd))}"
 
-    github_client = Octokit::Client.new(access_token: ENV["GITHUB_TOKEN"])
-    gh_repo = github_client.repository(github_repo_name)
-    current_commit_sha = gh_client.commit(gh_repo_name, "main").commit.sha
-    current_tree_sha = gh_client.commit(gh_repo_name, "main").commit.tree.sha
-
-    base_branch_tree = gh_client.create_tree(
-      gh_repo_name,
-      [
-        {
-          path: "solutions/#{language.slug}/#{stage.slug}",
-          sha: null
-        }
-      ],
-      base_tree_sha: current_tree_sha
-    )
-
-    base_commit = gh_client.create_commit(
-      gh_repo,
-      "remove old solution for #{language.slug} - ##{stage.number} (#{stage.name})",
-      base_branch_tree.sha,
-      current_commit_sha
-    )
-
-    head_commit = gh_client.create_commit(
-      gh_repo,
-      "add solution for #{language.slug} - ##{stage.number} (#{stage.name})",
-      current_tree_sha,
-      base_commit.sha
-    )
-
     base_branch_name = "base-for-#{language.slug}-stage-#{stage.number}"
     head_branch_name = "add-#{language.slug}-stage-#{stage.number}"
 
-    github_client.create_ref(github_repo_name, "heads/#{base_branch_name}", base_commit.sha)
-    github_client.create_ref(github_repo_name, "heads/#{head_branch_name}", head_commit.sha)
+    repo_dir = Dir.mktmpdir
+    `rm -rf #{repo_dir}`
+    `git clone git@github.com:#{github_repo_name}.git #{repo_dir}`
 
-    pull_request = github_client.create_pull_request(
+    `cd #{repo_dir} && git checkout -b #{base_branch_name}`
+    `cd #{repo_dir} && rm -rf solutions/#{language.slug}/#{stage.slug}/code`
+    `cd #{repo_dir} && rm -rf solutions/#{language.slug}/#{stage.slug}/diff`
+    `cd #{repo_dir} && rm -rf solutions/#{language.slug}/#{stage.slug}/explanation.md`
+    `cd #{repo_dir} && git add . && git commit -m "Remove existing solutions for #{language.slug}-#{stage.slug}"`
+    `cd #{repo_dir} && git push -f origin #{base_branch_name}`
+
+    `cd #{repo_dir} && git checkout -b #{head_branch_name}`
+    `cd #{repo_dir} && git checkout main solutions/#{language.slug}/#{stage.slug}`
+    `cd #{repo_dir} && git add . && git commit -m "Add solutions for #{language.slug}-#{stage.slug}"`
+    `cd #{repo_dir} && git push -f origin #{head_branch_name}`
+
+    gh_client = Octokit::Client.new(access_token: ENV["GITHUB_TOKEN"])
+
+    pull_request = gh_client.create_pull_request(
       github_repo_name,
       base_branch_name,
       head_branch_name,
