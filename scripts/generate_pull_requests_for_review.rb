@@ -12,7 +12,6 @@ class PullRequestGenerator
   def generate_all
     solution_directories.each do |solution_directory|
       generate_for_solution_directory(solution_directory)
-      raise "hey"
     end
   end
 
