@@ -4,7 +4,7 @@ github_client = Octokit::Client.new(access_token: ENV.fetch("GITHUB_TOKEN"))
 
 syncer = RepoSyncer.new(github_client)
 
-Dir["compiled_starters/*"].each do |dir|
+Dir["../compiled_starters/*"].each do |dir|
   repo_name = File.basename(dir)
   puts "Syncing #{repo_name}"
   pr_url = syncer.sync(repo_name, dir)
