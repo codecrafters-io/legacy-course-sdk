@@ -11,13 +11,13 @@ class StarterRepoTester < TestHarness
     @language = language
   end
 
-  def self.from_repo_name(repo_name)
-    course, language = repo_name.split("-starter-")
+  def self.from_repo_name(course, repo_name)
+    language = repo_name.split("-starter-").last
     new(course, language)
   end
 
   def do_test
-    log_header("Testing starter: #{course}-starter-#{language}")
+    log_header("Testing starter: #{course.slug}-starter-#{language}")
 
     assert dockerfiles.any?, "Expected a dockerfile to exist for #{slug}"
 
@@ -54,15 +54,11 @@ class StarterRepoTester < TestHarness
   end
 
   def starter_dir
-    "../compiled_starters/#{course}-starter-#{language}"
+    "../compiled_starters/#{course.slug}-starter-#{language}"
   end
 
   def dockerfile_path
-    "../dockerfiles/#{course}/#{language}-#{latest_version}"
-  end
-
-  def latest_dockerfile
-    "#{course}-#{language}-#{latest_version}"
+    "../dockerfiles/#{language}-#{latest_version}.Dockerfile"
   end
 
   def latest_version
@@ -74,11 +70,11 @@ class StarterRepoTester < TestHarness
   end
 
   def slug
-    "#{course}-#{language_pack}-#{latest_version}"
+    "#{course.slug}-#{language_pack}-#{latest_version}"
   end
 
   def dockerfiles
-    Dir["../dockerfiles/#{course}/*.Dockerfile"]
+    Dir["../dockerfiles/*.Dockerfile"]
       .map { |dockerfile_path| File.basename(dockerfile_path) }
       .select { |dockerfile_name| dockerfile_name.start_with?(language_pack) }
   end
@@ -93,16 +89,8 @@ class StarterRepoTester < TestHarness
     end
   end
 
-  def dockerfile_path
-    "../dockerfiles/#{course}/#{language_pack}-#{latest_version}.Dockerfile"
-  end
-
-  def starter_dir
-    "../compiled_starters/#{course}-starter-#{language}"
-  end
-
-  def starter_tester_path
-    ".starter_testers/#{course}"
+  def tester_path
+    ".testers/#{course.slug}"
   end
 
   def build_image
@@ -121,7 +109,7 @@ class StarterRepoTester < TestHarness
     command = [
       "docker run",
       "-v #{tmp_dir}:/app",
-      "-v #{File.expand_path(starter_tester_path)}:/tester:ro",
+      "-v #{File.expand_path(tester_path)}:/tester:ro",
       "-v #{File.expand_path("tests/init.sh")}:/init.sh:ro",
       "-e CODECRAFTERS_SUBMISSION_DIR=/app",
       "-e CODECRAFTERS_COURSE_PAGE_URL=http://test-app.codecrafters.io/url",
