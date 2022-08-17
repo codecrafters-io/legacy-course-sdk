@@ -24,11 +24,6 @@ jobs:
           bundler-cache: true
           working-directory: course_definition_tester
 
-      - run: "echo ::remove-matcher owner=go::" # Messes with our output
-
-      - run: make download_testers
-        working-directory: course_definition_tester
-
       - run: bundle exec ruby scripts/sync_starter_repositories.rb
         working-directory: course_definition_tester
         env:
