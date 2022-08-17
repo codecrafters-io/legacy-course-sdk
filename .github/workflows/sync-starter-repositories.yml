@@ -2,6 +2,9 @@ name: Sync Starter Repositories
 
 on:
   workflow_call:
+    secrets:
+      GITHUB_TOKEN:
+        required: true
 
 jobs:
   sync_repos:
@@ -28,3 +31,5 @@ jobs:
 
       - run: bundle exec ruby scripts/sync_starter_repositories.rb
         working-directory: course_definition_tester
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
