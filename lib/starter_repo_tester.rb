@@ -12,12 +12,12 @@ class StarterRepoTester < TestHarness
   end
 
   def self.from_repo_name(course, repo_name)
-    language = repo_name.split("-starter-").last
+    language = Language.find_by_slug!(repo_name.split("-starter-").last)
     new(course, language)
   end
 
   def do_test
-    log_header("Testing starter: #{course.slug}-starter-#{language}")
+    log_header("Testing starter: #{course.slug}-starter-#{language.slug}")
 
     assert dockerfiles.any?, "Expected a dockerfile to exist for #{slug}"
 
@@ -54,11 +54,11 @@ class StarterRepoTester < TestHarness
   end
 
   def starter_dir
-    "../compiled_starters/#{course.slug}-starter-#{language}"
+    "../compiled_starters/#{course.slug}-starter-#{language.slug}"
   end
 
   def dockerfile_path
-    "../dockerfiles/#{language}-#{latest_version}.Dockerfile"
+    "../dockerfiles/#{language.slug}-#{latest_version}.Dockerfile"
   end
 
   def latest_version
@@ -80,12 +80,12 @@ class StarterRepoTester < TestHarness
   end
 
   def language_pack
-    if language.eql?("javascript")
+    if language.slug.eql?("javascript")
       "nodejs"
-    elsif language.eql?("csharp")
+    elsif language.slug.eql?("csharp")
       "dotnet"
     else
-      language
+      language.slug
     end
   end
 
