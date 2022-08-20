@@ -32,6 +32,11 @@ class RepoSyncer
       }
     end
 
+    begin
+      @github_client.delete_ref(repo.full_name, "heads/sync")
+    rescue Octokit::UnprocessableEntity
+    end
+
     tree = @github_client.create_tree(repo.full_name, gh_files)
     return if tree.sha == master_tree_sha
 
@@ -39,11 +44,6 @@ class RepoSyncer
       commit_message,
       tree.sha,
       [master_commit_sha])
-
-    begin
-      @github_client.delete_ref(repo.full_name, "heads/sync")
-    rescue Octokit::UnprocessableEntity
-    end
 
     @github_client.create_ref(repo.full_name, "heads/sync", commit.sha)
     pr = @github_client.create_pull_request(
