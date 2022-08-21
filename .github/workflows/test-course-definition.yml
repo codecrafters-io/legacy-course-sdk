@@ -80,7 +80,7 @@ jobs:
           components: rustfmt
           override: true
 
-      - run: bash -c "rustfmt --check **/*.rs"
+      - run: find . -name '*.rs' | xargs rustfmt --check
 
   identify_language_slugs:
     runs-on: ubuntu-latest
