@@ -68,6 +68,20 @@ jobs:
       - run: npx prettier --check ../**/*.js
         working-directory: course_definition_tester
 
+  rust_lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt
+          override: true
+
+      - run: rustfmt --check **/*.rs
+
   identify_language_slugs:
     runs-on: ubuntu-latest
 
