@@ -21,19 +21,19 @@ class DockerfileTester < TestHarness
   def language
     return "javascript" if language_pack.start_with?("nodejs")
     return "csharp" if language_pack.start_with?("dotnet")
-    language_pack.split("-").first
+    Language.find_by_slug!(language_pack.split("-").first)
   end
 
   def do_test
     log_header("Testing Dockerfile: #{slug}")
 
-    log_info "Building #{language} image without cache"
+    log_info "Building #{language_pack} image without cache"
     time_taken = assert_time_under(300) { build_image }
 
     log_info "Took #{time_taken} secs"
     log_info ""
 
-    log_info "Building #{language} image with cache"
+    log_info "Building #{language_pack} image with cache"
     time_taken = assert_time_under(5) { build_image }
 
     log_success "Took #{time_taken} secs"
@@ -55,6 +55,6 @@ class DockerfileTester < TestHarness
   end
 
   def starter_dir
-    "../compiled_starters/#{course.slug}-starter-#{language}"
+    "../compiled_starters/#{course.slug}-starter-#{language.slug}"
   end
 end

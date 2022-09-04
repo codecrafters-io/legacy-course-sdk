@@ -32,11 +32,11 @@ end.compact
 
 testers = dockerfile_testers + starter_repo_testers
 
-puts "Found #{testers.count} tests"
+puts "Found #{testers.count} tests (#{dockerfile_testers.count} Dockerfile tests, #{starter_repo_testers.count} starter repo tests)"
 
 if language_filter
   puts "Filtering by language:#{language_filter}"
-  testers = testers.select { |tester| tester.language == language_filter }
+  testers = testers.select { |tester| tester.language.slug == language_filter }
 end
 
 puts "#{testers.count} tests after filtering."
