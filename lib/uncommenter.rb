@@ -7,6 +7,7 @@ class Uncommenter
     "c" => DOUBLE_SLASHES,
     "clojure" => /(^\s*)(;;\s{0,1})/,
     "csharp" => DOUBLE_SLASHES,
+    "crystal" => POUND_SIGN,
     "elixir" => POUND_SIGN,
     "go" => DOUBLE_SLASHES,
     "haskell" => DOUBLE_HYPHENS,
@@ -18,7 +19,7 @@ class Uncommenter
     "python" => POUND_SIGN,
     "ruby" => POUND_SIGN,
     "rust" => DOUBLE_SLASHES,
-    "crystal" => POUND_SIGN
+    "swift" => DOUBLE_SLASHES,
   }
 
   attr_reader :language_slug, :code, :uncomment_marker_pattern

@@ -14,4 +14,5 @@ LANGUAGES = [
   Language.new(slug: "python", name: "Python", repo_suffix: "python"),
   Language.new(slug: "ruby", name: "Ruby", repo_suffix: "ruby"),
   Language.new(slug: "rust", name: "Rust", repo_suffix: "rust"),
+  Language.new(slug: "swift", name: "Swift", repo_suffix: "swift"),
 ]

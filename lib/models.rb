@@ -75,7 +75,8 @@ class Language
       "php" => "php",
       "python" => "py",
       "ruby" => "rb",
-      "rust" => "rs"
+      "rust" => "rs",
+      "swift" => "swift"
     }.fetch(@slug)
   end
 
