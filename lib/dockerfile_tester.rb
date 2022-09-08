@@ -18,13 +18,19 @@ class DockerfileTester < TestHarness
     new(course, language_pack)
   end
 
+  def copied_starter_dir
+    @copied_starter_dir ||= Dir.mktmpdir.tap { |x| FileUtils.rmdir(x) }
+  end
+
   def language
-    return "javascript" if language_pack.start_with?("nodejs")
-    return "csharp" if language_pack.start_with?("dotnet")
+    return Language.find_by_slug!("javascript") if language_pack.start_with?("nodejs")
+    return Language.find_by_slug!("csharp") if language_pack.start_with?("dotnet")
     Language.find_by_slug!(language_pack.split("-").first)
   end
 
   def do_test
+    FileUtils.cp_r(starter_dir, copied_starter_dir)
+
     log_header("Testing Dockerfile: #{slug}")
 
     log_info "Building #{language_pack} image without cache"
@@ -41,7 +47,7 @@ class DockerfileTester < TestHarness
 
   def build_image
     assert_stdout_contains(
-      "docker build -t #{slug} -f #{dockerfile_path} #{starter_dir}",
+      "docker build -t #{slug} -f #{dockerfile_path} #{copied_starter_dir}",
       "Successfully tagged #{slug}"
     )
   end
