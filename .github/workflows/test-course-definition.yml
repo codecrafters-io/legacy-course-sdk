@@ -129,6 +129,38 @@ jobs:
       - run: bundle exec ruby scripts/test_solutions.rb ${{matrix.language}}
         working-directory: course_definition_tester
 
+  test_starter_code:
+    runs-on: ubuntu-latest
+
+    needs:
+      - identify_language_slugs
+
+    strategy:
+      matrix:
+        language: ${{ fromJSON(needs.identify_language_slugs.outputs.language_slugs) }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/checkout@v3
+        with:
+          repository: 'codecrafters-io/course-definition-tester'
+          path: 'course_definition_tester'
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.1' # Not needed with a .ruby-version file
+          bundler-cache: true
+          working-directory: course_definition_tester
+
+      - run: "echo ::remove-matcher owner=go::" # Messes with our output
+
+      - run: make download_testers
+        working-directory: course_definition_tester
+
+      - run: bundle exec ruby scripts/test_starter_code.rb ${{matrix.language}}
+        working-directory: course_definition_tester
+
   validate-schemas:
     runs-on: ubuntu-latest
 
