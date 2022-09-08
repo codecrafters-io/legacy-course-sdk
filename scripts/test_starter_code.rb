@@ -20,8 +20,10 @@ STARTER_REPO_PATHS_TO_SKIP = [
 language_filter = ARGV[0]
 
 dockerfile_testers = Dir["../dockerfiles/*.Dockerfile"].map do |path|
-  next if DOCKERFILE_PATHS_TO_SKIP.include?(path)
-  DockerfileTester.from_dockerfile(course, File.basename(path))
+  dockerfile_name = File.basename(path)
+
+  next if DOCKERFILE_PATHS_TO_SKIP.include?(dockerfile_name)
+  DockerfileTester.from_dockerfile(course, dockerfile_name)
 end.compact
 
 starter_repo_testers = Dir["../compiled_starters/*"].map do |compiled_starter_path|
