@@ -58,7 +58,7 @@ class StarterRepoTester < TestHarness
   end
 
   def dockerfile_path
-    "../dockerfiles/#{language.slug}-#{latest_version}.Dockerfile"
+    "../dockerfiles/#{language_pack}-#{latest_version}.Dockerfile"
   end
 
   def latest_version
