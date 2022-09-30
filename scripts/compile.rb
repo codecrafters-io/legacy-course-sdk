@@ -8,6 +8,11 @@ require_relative "../lib/models"
 course_dir = ARGV[0]
 language_filter = ARGV[1]
 
+unless course_dir
+  puts "Usage: ruby scripts/compile.rb <course-directory> [language-filter]"
+  exit 1
+end
+
 course = Course.load_from_file(File.join(course_dir, "course-definition.yml"))
 
 compiled_starters_dir = File.join(course_dir, "compiled_starters")
