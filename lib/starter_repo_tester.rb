@@ -2,18 +2,16 @@ require_relative "logger"
 require_relative "starter_code_uncommenter"
 
 class StarterRepoTester < TestHarness
-  include Logger
+  include CustomLogger
 
-  attr_reader :course, :language
+  attr_reader :course, :dockerfiles_dir, :starter_dir, :tester_dir, :language
 
-  def initialize(course, language)
+  def initialize(course:, dockerfiles_dir:, starter_dir:, tester_dir:, language:)
     @course = course
+    @dockerfiles_path = dockerfiles_dir
+    @starter_dir = starter_dir
+    @tester_dir = tester_dir
     @language = language
-  end
-
-  def self.from_repo_name(course, repo_name)
-    language = Language.find_by_slug!(repo_name.split("-starter-").last)
-    new(course, language)
   end
 
   def do_test
@@ -53,12 +51,8 @@ class StarterRepoTester < TestHarness
     log_success "Took #{time_taken} secs"
   end
 
-  def starter_dir
-    "../compiled_starters/#{course.slug}-starter-#{language.slug}"
-  end
-
   def dockerfile_path
-    "../dockerfiles/#{language_pack}-#{latest_version}.Dockerfile"
+    "#{dockerfiles_dir}/#{language_pack}-#{latest_version}.Dockerfile"
   end
 
   def latest_version
@@ -74,23 +68,13 @@ class StarterRepoTester < TestHarness
   end
 
   def dockerfiles
-    Dir["../dockerfiles/*.Dockerfile"]
+    Dir["#{dockerfiles_dir}/*.Dockerfile"]
       .map { |dockerfile_path| File.basename(dockerfile_path) }
       .select { |dockerfile_name| dockerfile_name.start_with?(language_pack) }
   end
 
   def language_pack
-    if language.slug.eql?("javascript")
-      "nodejs"
-    elsif language.slug.eql?("csharp")
-      "dotnet"
-    else
-      language.slug
-    end
-  end
-
-  def tester_path
-    ".testers/#{course.slug}"
+    language.language_pack
   end
 
   def build_image
@@ -109,7 +93,7 @@ class StarterRepoTester < TestHarness
     command = [
       "docker run",
       "-v #{tmp_dir}:/app",
-      "-v #{File.expand_path(tester_path)}:/tester:ro",
+      "-v #{File.expand_path(tester_dir)}:/tester:ro",
       "-v #{File.expand_path("tests/init.sh")}:/init.sh:ro",
       "-e CODECRAFTERS_SUBMISSION_DIR=/app",
       "-e CODECRAFTERS_COURSE_PAGE_URL=http://test-app.codecrafters.io/url",

@@ -4,18 +4,14 @@ require_relative "test_harness"
 require "open3"
 
 class DockerfileTester < TestHarness
-  include Logger
+  include CustomLogger
 
-  attr_reader :course, :language_pack
+  attr_reader :course, :compiled_starters_dir, :dockerfile_path
 
-  def initialize(course, language_pack)
+  def initialize(course, compiled_starters_dir, dockerfile_path)
     @course = course
-    @language_pack = language_pack
-  end
-
-  def self.from_dockerfile(course, dockerfile_name)
-    language_pack = dockerfile_name.sub(".Dockerfile", "")
-    new(course, language_pack)
+    @compiled_starters_dir = compiled_starters_dir
+    @dockerfile_path = dockerfile_path
   end
 
   def copied_starter_dir
@@ -23,9 +19,11 @@ class DockerfileTester < TestHarness
   end
 
   def language
-    return Language.find_by_slug!("javascript") if language_pack.start_with?("nodejs")
-    return Language.find_by_slug!("csharp") if language_pack.start_with?("dotnet")
-    Language.find_by_slug!(language_pack.split("-").first)
+    Language.find_by_language_pack!(language_pack)
+  end
+
+  def language_pack
+    File.basename(dockerfile_path).sub(".Dockerfile", "")
   end
 
   def do_test
@@ -56,11 +54,7 @@ class DockerfileTester < TestHarness
     "#{course.slug}-#{language_pack}"
   end
 
-  def dockerfile_path
-    "../dockerfiles/#{language_pack}.Dockerfile"
-  end
-
   def starter_dir
-    "../compiled_starters/#{course.slug}-starter-#{language.slug}"
+    "#{compiled_starters_dir}/#{course.slug}-starter-#{language.slug}"
   end
 end

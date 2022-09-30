@@ -9,6 +9,7 @@ gem "mustache"
 gem "colorize"
 gem "diffy"
 gem "pmap"
+gem "httparty"
 
 group :development do
   gem "pry"

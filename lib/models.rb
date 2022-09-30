@@ -59,6 +59,12 @@ class Language
     LANGUAGES.detect(-> { raise "Language with slug #{slug} not found" }) { |language| language.slug.eql?(slug) }
   end
 
+  def self.find_by_language_pack!(language_pack)
+    return find_by_slug!("javascript") if language_pack.start_with?("nodejs")
+    return find_by_slug!("csharp") if language_pack.start_with?("dotnet")
+    find_by_slug!(language_pack.split("-").first)
+  end
+
   def code_file_extension
     {
       "c" => "c",
@@ -78,6 +84,16 @@ class Language
       "rust" => "rs",
       "swift" => "swift"
     }.fetch(@slug)
+  end
+
+  def language_pack
+    if @slug.eql?("javascript")
+      "nodejs"
+    elsif @slug.eql?("csharp")
+      "dotnet"
+    else
+      @slug
+    end
   end
 
   def syntax_highlighting_identifier

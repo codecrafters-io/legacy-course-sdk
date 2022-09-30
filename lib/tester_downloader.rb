@@ -1,3 +1,4 @@
+
 class TesterDownloader
   def initialize(course:, testers_root_dir:)
     @course = course
@@ -5,11 +6,12 @@ class TesterDownloader
   end
 
   def download_if_needed
-    return if File.exist?(tester_dir)
+    return tester_dir if File.exist?(tester_dir)
 
     compressed_file_path = File.join(@testers_root_dir, "#{@course.slug}.tar.gz")
 
-    File.open(filename, "wb") do |file|
+    FileUtils.mkdir_p(@testers_root_dir)
+    File.open(compressed_file_path, "wb") do |file|
       artifact_url = "https://github.com/#{tester_repository_name}/releases/download/#{latest_tester_version}/#{latest_tester_version}_linux_amd64.tar.gz"
 
       HTTParty.get(artifact_url, stream_body: true) do |fragment|
@@ -17,9 +19,11 @@ class TesterDownloader
       end
     end
 
-    File.mkdir_p(tester_dir)
+    FileUtils.mkdir_p(tester_dir)
     `tar xf #{compressed_file_path} -C #{tester_dir}`
-    File.rm(compressed_file_path)
+    File.delete(compressed_file_path)
+
+    tester_dir
   end
 
   def latest_tester_version

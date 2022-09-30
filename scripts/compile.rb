@@ -1,3 +1,4 @@
+# Usage: ruby scripts/compile.rb <course_dir> <language_slug>
 require_relative "../lib/starter_template_compiler/compiler"
 require_relative "../lib/solution_diffs_compiler"
 require_relative "../lib/solution_definitions_compiler"
