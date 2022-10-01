@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: 'codecrafters-io/course-definition-tester'
+          repository: 'codecrafters-io/course-sdk'
           ref: 'rohitpaulk/try-docker'
 
       - uses: actions/checkout@v3
@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: 'codecrafters-io/course-definition-tester'
+          repository: 'codecrafters-io/course-sdk'
           ref: 'rohitpaulk/try-docker'
 
       - uses: actions/checkout@v3
@@ -51,7 +51,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: 'codecrafters-io/course-definition-tester'
+          repository: 'codecrafters-io/course-sdk'
           ref: 'rohitpaulk/try-docker'
 
       - uses: actions/checkout@v3
@@ -70,7 +70,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: 'codecrafters-io/course-definition-tester'
+          repository: 'codecrafters-io/course-sdk'
           ref: 'rohitpaulk/try-docker'
 
       - uses: actions/checkout@v3
@@ -107,7 +107,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: 'codecrafters-io/course-definition-tester'
+          repository: 'codecrafters-io/course-sdk'
           ref: 'rohitpaulk/try-docker'
 
       - uses: actions/checkout@v3
@@ -128,7 +128,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          repository: 'codecrafters-io/course-definition-tester'
+          repository: 'codecrafters-io/course-sdk'
           ref: 'rohitpaulk/try-docker'
 
       - uses: actions/checkout@v3
