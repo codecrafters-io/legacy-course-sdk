@@ -20,9 +20,8 @@ COMMENTED_DEFINITION_FILE_CONTENTS = <<~EOF
 EOF
 
 class SolutionDefinitionsCompiler
-  def initialize(course:, solutions_directory:)
+  def initialize(course:)
     @course = course
-    @solutions_directory = solutions_directory
   end
 
   def compile_all
@@ -51,6 +50,6 @@ class SolutionDefinitionsCompiler
   end
 
   def solution_directories
-    Dir.glob(File.join(@solutions_directory, "*", "*", "code")).map { |path| File.dirname(path) }
+    Dir.glob(File.join(@course.solutions_dir, "*", "*", "code")).map { |path| File.dirname(path) }
   end
 end

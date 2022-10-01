@@ -6,10 +6,8 @@ require_relative "../lib/starter_code_uncommenter"
 require_relative "../lib/unindenter"
 
 class FirstStageExplanationsCompiler
-  def initialize(course:, starters_directory:, solutions_directory:)
+  def initialize(course:)
     @course = course
-    @starters_directory = starters_directory
-    @solutions_directory = solutions_directory
   end
 
   def compile_all
@@ -26,7 +24,7 @@ class FirstStageExplanationsCompiler
 
   def compile_for_starter_repository_directory(starter_repository_directory)
     language = Language.find_by_slug!(File.basename(starter_repository_directory).split("-").last)
-    explanation_file_path = File.join(@solutions_directory, language.slug, @course.first_stage.slug, "explanation.md")
+    explanation_file_path = File.join(@course.solutions_dir, language.slug, @course.first_stage.slug, "explanation.md")
 
     File.delete(explanation_file_path) if File.exist?(explanation_file_path)
     FileUtils.mkdir_p(File.dirname(explanation_file_path))
@@ -67,6 +65,6 @@ class FirstStageExplanationsCompiler
   end
 
   def starter_repository_directories
-    Dir.glob(File.join(@starters_directory, "#{@course.slug}-starter-*"))
+    Dir.glob(File.join(@course.compiled_starter_repositories_dir, "#{@course.slug}-starter-*"))
   end
 end
