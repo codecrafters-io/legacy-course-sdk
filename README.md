@@ -17,5 +17,5 @@ $ git clone git@github.com:codecrafters-io/build-your-own-git.git courses/git
 Run this command to compile and test Go solutions: 
 
 ```sh
-$ docker-compose run development scripts/compile_and_test.rb courses/git go
+$ docker-compose run tester scripts/compile_and_test.sh courses/git go
 ```
