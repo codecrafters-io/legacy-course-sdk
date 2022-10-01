@@ -17,6 +17,12 @@ class FirstStageSolutionsCompiler
     end
   end
 
+  def compile_for_language(language)
+    starter_repository_directories
+      .select { |starter_repository_directory| File.basename(starter_repository_directory).split("-").last.eql?(language.slug) }
+      .map { |starter_repository_directory| compile_for_starter_repository_directory(starter_repository_directory) }
+  end
+
   def compile_for_starter_repository_directory(starter_repository_directory)
     language = Language.find_by_slug!(File.basename(starter_repository_directory).split("-").last)
     code_directory = File.join(@solutions_directory, language.slug, @course.first_stage.slug, "code")

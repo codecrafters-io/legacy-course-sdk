@@ -24,9 +24,9 @@ class StarterTemplateCompiler
     end
   end
 
-  def compile_for_language(language_slug)
+  def compile_for_language(language)
     @definitions.each do |definition|
-      next unless definition.language.slug.eql?(language_slug)
+      next unless definition.language.slug.eql?(language.slug)
 
       puts "compiling #{definition.course.slug}-#{definition.language.slug}"
       compile_definition(definition)

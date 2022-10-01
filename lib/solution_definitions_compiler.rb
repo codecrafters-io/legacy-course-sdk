@@ -31,6 +31,12 @@ class SolutionDefinitionsCompiler
     end
   end
 
+  def compile_for_language(language)
+    solution_directories
+      .select { |solution_dir| File.dirname(File.dirname(solution_dir)).eql?(language.slug) }
+      .map { |solution_dir| compile_for_solution_directory(solution_dir) }
+  end
+
   protected
 
   def compile_for_solution_directory(solution_directory)

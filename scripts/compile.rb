@@ -50,11 +50,12 @@ first_stage_explanations_compiler = FirstStageExplanationsCompiler.new(
 )
 
 if language_filter
-  starter_template_compiler.compile_for_language(language_filter)
-  first_stage_solutions_compiler.compile_for_language(language_filter)
-  first_stage_explanations_compiler.compile_for_language(language_filter)
-  solution_diffs_compiler.compile_for_language(language_filter)
-  solution_definitions_compiler.compile_for_language(language_filter)
+  language = Language.find_by_slug!(language_filter)
+  starter_template_compiler.compile_for_language(language)
+  first_stage_solutions_compiler.compile_for_language(language)
+  first_stage_explanations_compiler.compile_for_language(language)
+  solution_diffs_compiler.compile_for_language(language)
+  solution_definitions_compiler.compile_for_language(language)
 else
   starter_template_compiler.compile_all
   first_stage_solutions_compiler.compile_all

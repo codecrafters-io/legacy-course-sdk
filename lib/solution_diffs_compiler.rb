@@ -30,8 +30,6 @@ class SolutionDiffsCompiler
     end
   end
 
-  protected
-
   def compile_for_language(language)
     puts "compiling solution diffs for #{@course.slug}-#{language.slug}"
 
@@ -59,6 +57,8 @@ class SolutionDiffsCompiler
       end
     end
   end
+
+  protected
 
   def compute_changed_files(source_directory, target_directory)
     source_directory_files = Dir.glob("#{source_directory}/**/*").select { |file_path| File.file?(file_path) }
