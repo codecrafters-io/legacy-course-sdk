@@ -20,10 +20,4 @@ ADD package.json /course-sdk/package.json
 ADD package-lock.json /course-sdk/package-lock.json
 RUN npm install
 
-# Ensure user IDs are maintained (for file permissions)
-ARG UID
-ARG GID
-ENV UID=${UID}
-ENV GID=${GID}
-
 ADD . /course-sdk
