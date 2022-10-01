@@ -9,78 +9,59 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: 'codecrafters-io/course-definition-tester'
 
       - uses: actions/checkout@v3
         with:
-          repository: 'codecrafters-io/course-definition-tester'
-          path: 'course_definition_tester'
+          path: courses/test_subject
 
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1' # Not needed with a .ruby-version file
-          bundler-cache: true
-          working-directory: course_definition_tester
+      - run: docker-compose run tester ruby scripts/compile.rb courses/test_subject
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-
-      - run: npm install
-        working-directory: course_definition_tester
-
-      - run: make compile
-        working-directory: course_definition_tester
-
-      - run: git diff --exit-code # Changes to existing files
-      - run: test -z "$(git ls-files compiled_starters/ --exclude-standard --others)" # Untracked files
+      - run: git -C courses/test_subject diff --exit-code # Changes to existing files
+      - run: test -z "$(git -C courses/test_subject ls-files compiled_starters/ --exclude-standard --others)" # Untracked files
 
   markdown_lint:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-
-      - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1' # Not needed with a .ruby-version file
+          repository: 'codecrafters-io/course-definition-tester'
 
-      - run: gem install mdl
-      - run: mdl --style relaxed compiled_starters
+      - uses: actions/checkout@v3
+        with:
+          path: courses/test_subject
+
+      - run: docker-compose run tester mdl --style relaxed courses/test_subject/compiled_starters
 
   js_lint:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: 'codecrafters-io/course-definition-tester'
 
       - uses: actions/checkout@v3
         with:
-          repository: 'codecrafters-io/course-definition-tester'
-          path: 'course_definition_tester'
+          path: courses/test_subject
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-
-      - run: npm install
-        working-directory: course_definition_tester
-
-      - run: npx prettier --check ../**/*.js
-        working-directory: course_definition_tester
+      - run: docker-compose run tester ./node_modules/.bin/prettier --check courses/test_subject/**/*.js
 
   rust_lint:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-
-      - uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
-          components: rustfmt
-          override: true
+          repository: 'codecrafters-io/course-definition-tester'
 
-      - run: find . -name '*.rs' | xargs rustfmt --check
+      - uses: actions/checkout@v3
+        with:
+          path: courses/test_subject
+
+      - run: find courses/test_subject -name '*.rs' | xargs rustfmt --check
 
   identify_language_slugs:
     runs-on: ubuntu-latest
@@ -97,7 +78,7 @@ jobs:
           LANGUAGE_SLUGS=$(ls solutions | xargs -I {} echo \"{}\" | jq -n '. |= [inputs]' | tr -d '\n')
           echo ::set-output name=language_slugs::${LANGUAGE_SLUGS}
 
-  test_solutions:
+  test:
     runs-on: ubuntu-latest
 
     needs:
@@ -109,78 +90,29 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: 'codecrafters-io/course-definition-tester'
 
       - uses: actions/checkout@v3
         with:
-          repository: 'codecrafters-io/course-definition-tester'
-          path: 'course_definition_tester'
-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1' # Not needed with a .ruby-version file
-          bundler-cache: true
-          working-directory: course_definition_tester
+          path: courses/test_subject
 
       - run: "echo ::remove-matcher owner=go::" # Messes with our output
 
-      - run: make download_testers
-        working-directory: course_definition_tester
-
-      - run: bundle exec ruby scripts/test_solutions.rb ${{matrix.language}}
-        working-directory: course_definition_tester
-
-  test_starter_code:
-    runs-on: ubuntu-latest
-
-    needs:
-      - identify_language_slugs
-
-    strategy:
-      matrix:
-        language: ${{ fromJSON(needs.identify_language_slugs.outputs.language_slugs) }}
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/checkout@v3
-        with:
-          repository: 'codecrafters-io/course-definition-tester'
-          path: 'course_definition_tester'
-
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1' # Not needed with a .ruby-version file
-          bundler-cache: true
-          working-directory: course_definition_tester
-
-      - run: "echo ::remove-matcher owner=go::" # Messes with our output
-
-      - run: make download_testers
-        working-directory: course_definition_tester
-
-      - run: bundle exec ruby scripts/test_starter_code.rb ${{matrix.language}}
-        working-directory: course_definition_tester
+      - run: docker-compose run tester ruby scripts/test.rb courses/test_subject ${{matrix.language}}
 
   validate-schemas:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          repository: 'codecrafters-io/course-definition-tester'
 
       - uses: actions/checkout@v3
         with:
-          repository: 'codecrafters-io/course-definition-tester'
-          path: 'course_definition_tester'
+          path: courses/test_subject
 
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
+      - run: docker-compose run node_modules/.bin/ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/test_subject/course-definition.yml
+      - run: ls courses/test_subject/solutions/*/*/definition.yml | xargs -P8 -n 1 node_modules/.bin/ajv validate --spec draft2020 -s schemas/course-stage-solution-definition.json -d
 
-      - run: npm install
-        working-directory: course_definition_tester
-
-      - run: npm install
-        working-directory: course_definition_tester
-
-      - run: make validate_schemas
-        working-directory: course_definition_tester
