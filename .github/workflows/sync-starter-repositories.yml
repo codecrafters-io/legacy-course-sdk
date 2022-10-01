@@ -12,11 +12,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          path: 'courses/test_subject'
 
       - uses: actions/checkout@v3
         with:
           repository: 'codecrafters-io/course-definition-tester'
-          path: 'course_definition_tester'
 
       - uses: ruby/setup-ruby@v1
         with:
@@ -24,7 +25,7 @@ jobs:
           bundler-cache: true
           working-directory: course_definition_tester
 
-      - run: bundle exec ruby scripts/sync_starter_repositories.rb
+      - run: docker-compose run tester ruby scripts/sync_starter_repositories.rb
         working-directory: course_definition_tester
         env:
           GITHUB_TOKEN: ${{ secrets.REPOSITORY_SYNCER_GITHUB_TOKEN }}

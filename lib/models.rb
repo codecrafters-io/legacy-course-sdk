@@ -41,6 +41,10 @@ class Course
       }
     )
   end
+
+  def source_repo_url
+    "https://github.com/codecrafters-io/build-your-own-#{slug}"
+  end
 end
 
 class Language
