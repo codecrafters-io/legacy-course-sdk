@@ -18,15 +18,9 @@ course = Course.load_from_dir(course_dir)
 
 compiled_starters_dir = File.join(course_dir, "compiled_starters")
 solutions_dir = File.join(course_dir, "solutions")
-starter_repository_definitions_file_path = File.join(course_dir, "starter-repository-definitions.yml")
 
 starter_template_compiler = StarterTemplateCompiler.new(course: course)
-
-solution_diffs_compiler = SolutionDiffsCompiler.new(
-  course: course,
-  solutions_directory: solutions_dir,
-  starters_directory: compiled_starters_dir,
-)
+solution_diffs_compiler = SolutionDiffsCompiler.new(course: course)
 
 solution_definitions_compiler = SolutionDefinitionsCompiler.new(
   course: course,

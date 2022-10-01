@@ -35,6 +35,10 @@ class Course
     File.join(@dir, "compiled-starters")
   end
 
+  def solutions_dir
+    File.join(@dir, "solutions")
+  end
+
   def first_stage
     stages.first
   end
