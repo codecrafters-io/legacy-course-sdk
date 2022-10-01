@@ -21,7 +21,7 @@ unless course_dir && language_slug
   exit 1
 end
 
-course = Course.load_from_file(File.join(course_dir, "course-definition.yml"))
+course = Course.load_from_dir(course_dir)
 compiled_starters_dir = File.join(course_dir, "compiled_starters")
 dockerfiles_dir = File.join(course_dir, "dockerfiles")
 

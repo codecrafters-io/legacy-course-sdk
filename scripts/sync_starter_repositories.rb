@@ -7,7 +7,7 @@ unless course_dir
   exit 1
 end
 
-course = Course.load_from_file(File.join(course_dir, "course-definition.yml"))
+course = Course.load_from_dir(course_dir)
 github_client = Octokit::Client.new(access_token: ENV.fetch("GITHUB_TOKEN"))
 
 syncer = RepoSyncer.new(github_client)

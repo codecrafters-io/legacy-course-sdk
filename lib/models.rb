@@ -17,20 +17,30 @@ class Course
   attr_reader :name
   attr_reader :short_name
   attr_reader :stages
+  attr_reader :dir
 
-  def initialize(slug:, name:, short_name:, stages:)
+  def initialize(slug:, name:, short_name:, stages:, dir:)
     @slug = slug
     @name = name
     @short_name = short_name
     @stages = stages
+    @dir = dir
+  end
+
+  def starter_repository_definitions_file_path
+    File.join(@dir, "starter-repository-definitions.yml")
+  end
+
+  def compiled_starter_repositories_dir
+    File.join(@dir, "compiled-starters")
   end
 
   def first_stage
     stages.first
   end
 
-  def self.load_from_file(file_path)
-    course_definition_yaml = YAML.load_file(file_path)
+  def self.load_from_dir(course_dir)
+    course_definition_yaml = YAML.load_file(File.join(course_dir, "course-definition.yml"))
 
     new(
       name: course_definition_yaml.fetch("name"),
@@ -38,7 +48,8 @@ class Course
       slug: course_definition_yaml.fetch("slug"),
       stages: course_definition_yaml.fetch("stages").each_with_index.map { |stage_yaml, stage_index|
         CourseStage.new(slug: stage_yaml.fetch("slug"), number: stage_index + 1, name: stage_yaml.fetch("name"))
-      }
+      },
+      dir: course_dir
     )
   end
 

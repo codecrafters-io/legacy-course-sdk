@@ -14,17 +14,13 @@ unless course_dir
   exit 1
 end
 
-course = Course.load_from_file(File.join(course_dir, "course-definition.yml"))
+course = Course.load_from_dir(course_dir)
 
 compiled_starters_dir = File.join(course_dir, "compiled_starters")
 solutions_dir = File.join(course_dir, "solutions")
 starter_repository_definitions_file_path = File.join(course_dir, "starter-repository-definitions.yml")
 
-starter_template_compiler = StarterTemplateCompiler.new(
-  output_directory: compiled_starters_dir,
-  templates_directory: course_dir,
-  definitions: StarterRepoDefinition.load_from_file(course, starter_repository_definitions_file_path)
-)
+starter_template_compiler = StarterTemplateCompiler.new(course: course)
 
 solution_diffs_compiler = SolutionDiffsCompiler.new(
   course: course,

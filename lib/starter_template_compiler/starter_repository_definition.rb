@@ -24,8 +24,8 @@ class StarterRepoDefinition
     @template_attrs = template_attrs
   end
 
-  def self.load_from_file(course, starter_definitions_file_path)
-    starter_definitions_yaml = YAML.load_file(starter_definitions_file_path)
+  def self.load_for_course(course)
+    starter_definitions_yaml = YAML.load_file(course.starter_repository_definitions_file_path)
 
     starter_definitions_yaml.map do |starter_definition_yaml|
       StarterRepoDefinition.new(
