@@ -12,12 +12,13 @@ RUN gem install bundler
 
 WORKDIR /course-sdk
 
+# Ensure that node_modules isn't overriden as part of docker mount
+ADD package.json /node-app/package.json
+ADD package-lock.json /node-app/package-lock.json
+RUN cd /node-app && npm install
+
 ADD Gemfile /course-sdk/Gemfile
 ADD Gemfile.lock /course-sdk/Gemfile.lock
 RUN bundle install
-
-ADD package.json /course-sdk/package.json
-ADD package-lock.json /course-sdk/package-lock.json
-RUN npm install
 
 ADD . /course-sdk

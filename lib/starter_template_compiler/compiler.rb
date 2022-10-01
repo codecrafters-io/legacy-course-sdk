@@ -7,8 +7,8 @@ require_relative "../languages"
 
 class StarterTemplateCompiler
   POSTPROCESSORS = {
-    "md" => proc { |filepath| `./node_modules/.bin/prettier --prose-wrap="always" --write #{filepath}` },
-    "js" => proc { |filepath| `./node_modules/.bin/prettier --write #{filepath}` }
+    "md" => proc { |filepath| `/node-app/node_modules/.bin/prettier --prose-wrap="always" --write #{filepath}` },
+    "js" => proc { |filepath| `/node-app/node_modules/.bin/prettier --write #{filepath}` }
   }
 
   def initialize(templates_directory:, output_directory:, definitions:)

@@ -22,8 +22,6 @@ jobs:
         continue-on-error: true
 
       - run: docker-compose build
-      - run: docker-compose run tester ls ./node_modules/.bin/
-      - run: docker-compose run tester ./node_modules/.bin/prettier --version
       - run: docker-compose run tester ruby scripts/compile.rb courses/test_subject
 
       - run: git -C courses/test_subject diff --exit-code # Changes to existing files
@@ -59,7 +57,7 @@ jobs:
           path: courses/test_subject
 
       - run: docker-compose build
-      - run: docker-compose run tester ./node_modules/.bin/prettier --check courses/test_subject/**/*.js
+      - run: docker-compose run tester /node-app/node_modules/.bin/prettier --check courses/test_subject/**/*.js
 
   rust_lint:
     runs-on: ubuntu-latest
