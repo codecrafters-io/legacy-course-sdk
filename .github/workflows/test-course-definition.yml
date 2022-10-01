@@ -21,6 +21,7 @@ jobs:
         # Ignore the failure of a step and avoid terminating the job.
         continue-on-error: true
 
+      - run: docker-compose build
       - run: docker-compose run tester ruby scripts/compile.rb courses/test_subject
 
       - run: git -C courses/test_subject diff --exit-code # Changes to existing files
@@ -39,6 +40,7 @@ jobs:
         with:
           path: courses/test_subject
 
+      - run: docker-compose build
       - run: docker-compose run tester mdl --style relaxed courses/test_subject/compiled_starters
 
   js_lint:
@@ -54,6 +56,7 @@ jobs:
         with:
           path: courses/test_subject
 
+      - run: docker-compose build
       - run: docker-compose run tester ./node_modules/.bin/prettier --check courses/test_subject/**/*.js
 
   rust_lint:
@@ -108,6 +111,7 @@ jobs:
 
       - run: "echo ::remove-matcher owner=go::" # Messes with our output
 
+      - run: docker-compose build
       - run: docker-compose run tester ruby scripts/test.rb courses/test_subject ${{matrix.language}}
 
   validate-schemas:
@@ -123,6 +127,7 @@ jobs:
         with:
           path: courses/test_subject
 
+      - run: docker-compose build
       - run: docker-compose run tester node_modules/.bin/ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/test_subject/course-definition.yml
       - run: ls courses/test_subject/solutions/*/*/definition.yml | xargs -P8 -n 1 node_modules/.bin/ajv validate --spec draft2020 -s schemas/course-stage-solution-definition.json -d
 
