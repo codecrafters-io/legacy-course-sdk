@@ -22,6 +22,7 @@ jobs:
         continue-on-error: true
 
       - run: docker-compose build
+      - run: docker-compose run tester ./node_modules/.bin/prettier --version
       - run: docker-compose run tester ruby scripts/compile.rb courses/test_subject
 
       - run: git -C courses/test_subject diff --exit-code # Changes to existing files
