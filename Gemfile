@@ -10,6 +10,7 @@ gem "colorize"
 gem "diffy"
 gem "pmap"
 gem "httparty"
+gem "mdl"
 
 group :development do
   gem "pry"
