@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      HOST_COURSE_SDK_PATH: "${PWD}"
     volumes:
       - .:/course-sdk
       - /var/run/docker.sock:/var/run/docker.sock
