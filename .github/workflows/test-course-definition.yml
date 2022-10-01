@@ -119,6 +119,6 @@ jobs:
         with:
           path: courses/test_subject
 
-      - run: docker-compose run node_modules/.bin/ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/test_subject/course-definition.yml
+      - run: docker-compose run tester node_modules/.bin/ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/test_subject/course-definition.yml
       - run: ls courses/test_subject/solutions/*/*/definition.yml | xargs -P8 -n 1 node_modules/.bin/ajv validate --spec draft2020 -s schemas/course-stage-solution-definition.json -d
 
