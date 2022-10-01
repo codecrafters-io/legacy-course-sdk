@@ -57,7 +57,7 @@ jobs:
           path: courses/test_subject
 
       - run: docker-compose build
-      - run: docker-compose run tester /node-app/node_modules/.bin/prettier --check courses/test_subject/**/*.js
+      - run: docker-compose run tester prettier --check courses/test_subject/**/*.js
 
   rust_lint:
     runs-on: ubuntu-latest
@@ -128,6 +128,6 @@ jobs:
           path: courses/test_subject
 
       - run: docker-compose build
-      - run: docker-compose run tester node_modules/.bin/ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/test_subject/course-definition.yml
-      - run: ls courses/test_subject/solutions/*/*/definition.yml | xargs -P8 -n 1 node_modules/.bin/ajv validate --spec draft2020 -s schemas/course-stage-solution-definition.json -d
+      - run: docker-compose run tester ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/test_subject/course-definition.yml
+      - run: ls courses/test_subject/solutions/*/*/definition.yml | xargs -P8 -n 1 ajv validate --spec draft2020 -s schemas/course-stage-solution-definition.json -d
 

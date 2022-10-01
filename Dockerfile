@@ -16,6 +16,7 @@ WORKDIR /course-sdk
 ADD package.json /node-app/package.json
 ADD package-lock.json /node-app/package-lock.json
 RUN cd /node-app && npm install
+ENV PATH="/node-app/node_modules/.bin:${PATH}"
 
 ADD Gemfile /course-sdk/Gemfile
 ADD Gemfile.lock /course-sdk/Gemfile.lock
