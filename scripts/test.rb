@@ -44,16 +44,15 @@ dockerfile_testers = Dir["#{course_dir}/dockerfiles/*.Dockerfile"].map do |docke
   DockerfileTester.new(course, compiled_starters_dir, dockerfile_path)
 end.compact
 
-starter_repo_testers = Dir["../compiled_starters/*"].map do |compiled_starter_path|
+starter_repo_testers = Dir["#{course_dir}/compiled_starters/*"].map do |compiled_starter_path|
   next if STARTER_REPO_NAMES_TO_SKIP.include?(File.basename(compiled_starter_path))
-  repo_name = File.basename(compiled_starter_path)
 
   StarterRepoTester.new(
     course: course,
     dockerfiles_dir: dockerfiles_dir,
     starter_dir: compiled_starter_path,
     tester_dir: TesterDownloader.new(course: course, testers_root_dir: "./testers").download_if_needed,
-    language: language,
+    language: Language.find_by_slug!(File.basename(compiled_starter_path).split("-starter-").last),
   )
 end.compact
 

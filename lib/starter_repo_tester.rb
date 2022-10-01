@@ -8,7 +8,7 @@ class StarterRepoTester < TestHarness
 
   def initialize(course:, dockerfiles_dir:, starter_dir:, tester_dir:, language:)
     @course = course
-    @dockerfiles_path = dockerfiles_dir
+    @dockerfiles_dir = dockerfiles_dir
     @starter_dir = starter_dir
     @tester_dir = tester_dir
     @language = language
@@ -85,16 +85,17 @@ class StarterRepoTester < TestHarness
   end
 
   def assert_script_output(expected_output, expected_exit_code = 0)
-    tmp_dir = Dir.mktmpdir
+    FileUtils.mkdir_p("./tmp")
+    tmp_dir = Dir.mktmpdir("starter_repo_tester", "./tmp")
 
     `rm -rf #{tmp_dir}`
     `cp -R #{File.expand_path(starter_dir)} #{tmp_dir}`
 
     command = [
       "docker run",
-      "-v #{tmp_dir}:/app",
-      "-v #{File.expand_path(tester_dir)}:/tester:ro",
-      "-v #{File.expand_path("tests/init.sh")}:/init.sh:ro",
+      "-v #{File.expand_path(tmp_dir, ENV["HOST_COURSE_SDK_PATH"])}:/app",
+      "-v #{File.expand_path(tester_dir, ENV["HOST_COURSE_SDK_PATH"])}:/tester:ro",
+      "-v #{File.expand_path("tests/init.sh", ENV["HOST_COURSE_SDK_PATH"])}:/init.sh:ro",
       "-e CODECRAFTERS_SUBMISSION_DIR=/app",
       "-e CODECRAFTERS_COURSE_PAGE_URL=http://test-app.codecrafters.io/url",
       "-e CODECRAFTERS_CURRENT_STAGE_SLUG=init",

@@ -84,7 +84,8 @@ class SolutionTester < TestHarness
   end
 
   def run_tests_for_stage(stage)
-    tmp_dir = Dir.mktmpdir
+    FileUtils.mkdir_p("./tmp")
+    tmp_dir = Dir.mktmpdir("solution_tester", "./tmp")
 
     `rm -rf #{tmp_dir}`
     `cp -R #{File.expand_path(solution_code_dir_for_stage(stage))} #{tmp_dir}`
@@ -92,9 +93,9 @@ class SolutionTester < TestHarness
     command = [
       "docker run",
       "--cap-add SYS_ADMIN",
-      "-v #{tmp_dir}:/app",
-      "-v #{File.expand_path(tester_dir)}:/tester:ro",
-      "-v #{File.expand_path("tests/init.sh")}:/init.sh:ro",
+      "-v #{File.expand_path(tmp_dir, ENV["HOST_COURSE_SDK_PATH"])}:/app",
+      "-v #{File.expand_path(tester_dir, ENV["HOST_COURSE_SDK_PATH"])}:/tester:ro",
+      "-v #{File.expand_path("tests/init.sh", ENV["HOST_COURSE_SDK_PATH"])}:/init.sh:ro",
       "-e CODECRAFTERS_SUBMISSION_DIR=/app",
       "-e CODECRAFTERS_COURSE_PAGE_URL=http://test-app.codecrafters.io/url",
       "-e CODECRAFTERS_CURRENT_STAGE_SLUG=#{stage.slug}",
