@@ -47,7 +47,7 @@ class StarterRepoDefinition
       {
         path: mapping.destination_path,
         contents: Mustache.render(template_contents, template_context),
-        is_executable: File.executable?(File.join(template_dir, mapping.template_path))
+        is_executable: sprintf("%04o", File.stat(File.join(template_dir, mapping.template_path)).mode).eql?("100755")
       }
     end
   end
