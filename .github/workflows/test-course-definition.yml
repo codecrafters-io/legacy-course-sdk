@@ -17,6 +17,10 @@ jobs:
         with:
           path: courses/test_subject
 
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
       - run: docker-compose run tester ruby scripts/compile.rb courses/test_subject
 
       - run: git -C courses/test_subject diff --exit-code # Changes to existing files
