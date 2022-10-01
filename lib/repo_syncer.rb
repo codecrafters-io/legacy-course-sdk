@@ -29,7 +29,7 @@ class RepoSyncer
 
       {
         path: Pathname.new(file_path).relative_path_from(Pathname.new(directory)),
-        mode: File.executable?(file_path) ? "100755" : "100644",
+        mode: sprintf("%04o", File.stat(File.join(template_dir, mapping.template_path)).mode).eql?("100755") ? "100755" : "100644",
         type: "blob",
         sha: @github_client.create_blob(repo.full_name, Base64.encode64(file_contents), "base64")
       }
