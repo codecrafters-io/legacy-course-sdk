@@ -14,7 +14,13 @@ class StarterRepoTester < TestHarness
     @language = language
   end
 
+  def copied_starter_dir
+    @copied_starter_dir ||= Dir.mktmpdir.tap { |x| FileUtils.rmdir(x) }
+  end
+
   def do_test
+    FileUtils.cp_r(starter_dir, copied_starter_dir)
+
     log_header("Testing starter: #{course.slug}-starter-#{language.slug}")
 
     assert dockerfiles.any?, "Expected a dockerfile to exist for #{slug}"
@@ -30,7 +36,7 @@ class StarterRepoTester < TestHarness
     log_success "Script output verified"
 
     log_info "Uncommenting starter code..."
-    diffs = StarterCodeUncommenter.new(starter_dir, language).uncomment
+    diffs = StarterCodeUncommenter.new(copied_starter_dir, language).uncomment
     diffs.each do |diff|
       if diff.to_s.empty?
         log_error("Expected uncommenting code to return a diff")
@@ -79,7 +85,7 @@ class StarterRepoTester < TestHarness
 
   def build_image
     assert_stdout_contains(
-      "docker build -t #{slug} -f #{dockerfile_path} #{starter_dir}",
+      "docker build -t #{slug} -f #{dockerfile_path} #{copied_starter_dir}",
       "Successfully tagged #{slug}"
     )
   end
@@ -89,7 +95,7 @@ class StarterRepoTester < TestHarness
     tmp_dir = Dir.mktmpdir("starter_repo_tester", "./tmp")
 
     `rm -rf #{tmp_dir}`
-    `cp -R #{File.expand_path(starter_dir)} #{tmp_dir}`
+    `cp -R #{File.expand_path(copied_starter_dir)} #{tmp_dir}`
 
     command = [
       "docker run",
