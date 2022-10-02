@@ -19,6 +19,8 @@ jobs:
 
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
+        with:
+          key: template-compilation-{hash}
 
       - run: docker-compose build
       - run: docker-compose run tester ruby scripts/compile.rb courses/test_subject
@@ -41,6 +43,8 @@ jobs:
 
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
+        with:
+          key: md-lint-{hash}
 
       - run: docker-compose build
       - run: docker-compose run tester mdl --style relaxed courses/test_subject/compiled_starters
@@ -60,6 +64,8 @@ jobs:
 
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
+        with:
+          key: js-lint-{hash}
 
       - run: docker-compose build
       - run: docker-compose run tester prettier --no-error-on-unmatched-pattern --check courses/test_subject/**/*.js
@@ -118,6 +124,8 @@ jobs:
 
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
+        with:
+          key: test-${{matrix.language}}-{hash}
 
       - run: docker-compose build
       - run: docker-compose run tester ruby scripts/test.rb courses/test_subject ${{matrix.language}}
@@ -137,6 +145,8 @@ jobs:
 
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
+        with:
+          key: validate-schemas-{hash}
 
       - run: docker-compose build
       - run: docker-compose run tester ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/test_subject/course-definition.yml
