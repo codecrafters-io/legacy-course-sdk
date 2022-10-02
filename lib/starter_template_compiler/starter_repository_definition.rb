@@ -43,11 +43,12 @@ class StarterRepoDefinition
 
   def files(template_dir)
     @file_mappings.map do |mapping|
-      template_contents = File.read(File.join(template_dir, mapping.template_path))
+      fpath = File.join(template_dir, mapping.template_path)
+      template_contents = File.read(fpath)
       {
         path: mapping.destination_path,
         contents: Mustache.render(template_contents, template_context),
-        is_executable: sprintf("%04o", File.stat(File.join(template_dir, mapping.template_path)).mode).eql?("100755")
+        mode: File.stat(fpath).mode
       }
     end
   end
