@@ -13,7 +13,7 @@ class ChangedFile
   end
 
   def diff
-    Diffy::Diff.new(old_contents, new_contents, include_diff_info: true, context: 25).to_s(:text).lines.map(&:rstrip)[2..].join("\n")
+    Diffy::Diff.new(old_contents, new_contents, include_diff_info: true, context: 25).to_s(:text).lines.map(&:rstrip)[2..].join("\n") + "\n"
   end
 end
 
