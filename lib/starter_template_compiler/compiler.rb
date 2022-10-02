@@ -41,7 +41,7 @@ class StarterTemplateCompiler
       path = File.join(directory, file[:path])
       FileUtils.mkdir_p(File.dirname(path))
       File.write(path, file[:contents])
-      FileUtils.chmod(0o755, path) if file[:is_executable]
+      FileUtils.chmod(file[:mode], path)
       postprocess!(path)
     end
   end
