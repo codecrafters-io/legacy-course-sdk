@@ -25,3 +25,5 @@ Run this command to compile and test Go solutions:
 ```sh
 $ docker compose run tester scripts/compile_and_test.sh courses/git go
 ```
+
+If you're running an older version of Docker, use `docker-compose` instead of `docker compose`.
