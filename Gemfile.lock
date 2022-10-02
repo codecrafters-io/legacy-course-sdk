@@ -3,15 +3,40 @@ GEM
   specs:
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
+    chef-utils (17.10.0)
+      concurrent-ruby
     coderay (1.1.2)
     colorize (0.8.1)
+    concurrent-ruby (1.1.10)
     diffy (3.3.0)
     faraday (1.0.0)
       multipart-post (>= 1.2, < 3)
+    httparty (0.20.0)
+      mime-types (~> 3.0)
+      multi_xml (>= 0.5.2)
+    kramdown (2.4.0)
+      rexml
+    kramdown-parser-gfm (1.1.0)
+      kramdown (~> 2.0)
+    mdl (0.11.0)
+      kramdown (~> 2.3)
+      kramdown-parser-gfm (~> 1.1)
+      mixlib-cli (~> 2.1, >= 2.1.1)
+      mixlib-config (>= 2.2.1, < 4)
+      mixlib-shellout
     method_source (1.0.0)
+    mime-types (3.4.1)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2022.0105)
     minitest (5.15.0)
     minitest-color (0.0.2)
       minitest (~> 5)
+    mixlib-cli (2.1.8)
+    mixlib-config (3.0.27)
+      tomlrb
+    mixlib-shellout (3.2.7)
+      chef-utils
+    multi_xml (0.6.0)
     multipart-post (2.1.1)
     mustache (1.1.1)
     octokit (4.18.0)
@@ -22,9 +47,11 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (4.0.6)
+    rexml (3.2.5)
     sawyer (0.8.2)
       addressable (>= 2.3.5)
       faraday (> 0.8, < 2.0)
+    tomlrb (2.0.3)
 
 PLATFORMS
   ruby
@@ -32,6 +59,8 @@ PLATFORMS
 DEPENDENCIES
   colorize
   diffy
+  httparty
+  mdl
   minitest
   minitest-color
   mustache

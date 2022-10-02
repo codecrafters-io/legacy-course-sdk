@@ -18,10 +18,8 @@ class ChangedFile
 end
 
 class SolutionDiffsCompiler
-  def initialize(course:, solutions_directory:, starters_directory:)
+  def initialize(course:)
     @course = course
-    @solutions_directory = solutions_directory
-    @starters_directory = starters_directory
   end
 
   def compile_all
@@ -30,23 +28,21 @@ class SolutionDiffsCompiler
     end
   end
 
-  protected
-
   def compile_for_language(language)
     puts "compiling solution diffs for #{@course.slug}-#{language.slug}"
 
     [[nil, @course.first_stage], *@course.stages.each_cons(2)].each do |previous_stage, next_stage|
       previous_stage_code_directory = if previous_stage
-        File.join(@solutions_directory, language.slug, previous_stage.slug, "code")
+        File.join(@course.solutions_dir, language.slug, previous_stage.slug, "code")
       else
         starter_directory_for(language)
       end
 
-      next_stage_code_directory = File.join(@solutions_directory, language.slug, next_stage.slug, "code")
+      next_stage_code_directory = File.join(@course.solutions_dir, language.slug, next_stage.slug, "code")
 
       next unless File.directory?(next_stage_code_directory)
 
-      next_stage_diff_directory = File.join(@solutions_directory, language.slug, next_stage.slug, "diff")
+      next_stage_diff_directory = File.join(@course.solutions_dir, language.slug, next_stage.slug, "diff")
       FileUtils.rm_rf(next_stage_diff_directory) if File.exist?(next_stage_diff_directory)
       FileUtils.mkdir_p(next_stage_diff_directory)
 
@@ -59,6 +55,8 @@ class SolutionDiffsCompiler
       end
     end
   end
+
+  protected
 
   def compute_changed_files(source_directory, target_directory)
     source_directory_files = Dir.glob("#{source_directory}/**/*").select { |file_path| File.file?(file_path) }
@@ -108,10 +106,10 @@ class SolutionDiffsCompiler
   end
 
   def languages
-    Dir.glob("#{@solutions_directory}/*").map { |language_directory| Language.find_by_slug!(File.basename(language_directory)) }
+    Dir.glob("#{@course.solutions_dir}/*").map { |language_directory| Language.find_by_slug!(File.basename(language_directory)) }
   end
 
   def starter_directory_for(language)
-    File.join(@starters_directory, "#{@course.slug}-starter-#{language.slug}")
+    File.join(@course.compiled_starter_repositories_dir, "#{@course.slug}-starter-#{language.slug}")
   end
 end

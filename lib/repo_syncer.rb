@@ -1,4 +1,7 @@
 require "octokit"
+require "pathname"
+
+require_relative "models"
 
 class RepoSyncer
   def initialize(github_client)
@@ -6,7 +9,7 @@ class RepoSyncer
   end
 
   # Returns the URL to PR, or nil if none
-  def sync(repo_name, directory)
+  def sync(course, repo_name, directory)
     repo = find_or_create_repo(repo_name)
     master = @github_client.ref(repo.full_name, "heads/master")
     master_commit_sha = master.object.sha
@@ -14,9 +17,9 @@ class RepoSyncer
     master_tree_sha = master_gh_commit.commit.tree.sha
 
     commit_message = <<~EOF
-      Syncing with #{source_repo_name}
+      Syncing with #{course.source_repo_url}
 
-      Created by https://github.com/codecrafters-io/course-definition-tester
+      Created by https://github.com/codecrafters-io/course-sdk
     EOF
 
     file_paths = Dir.glob("#{directory}/**/{*,.*}").reject { |f| File.directory?(f) }
@@ -26,7 +29,7 @@ class RepoSyncer
 
       {
         path: Pathname.new(file_path).relative_path_from(Pathname.new(directory)),
-        mode: File.executable?(file_path) ? "100755" : "100644",
+        mode: sprintf("%04o", File.stat(file_path).mode).eql?("100755") ? "100755" : "100644",
         type: "blob",
         sha: @github_client.create_blob(repo.full_name, Base64.encode64(file_contents), "base64")
       }
@@ -50,8 +53,8 @@ class RepoSyncer
       repo.full_name,
       "master",
       "sync",
-      "Sync with #{source_repo_name}",
-      "This repository is maintained via https://github.com/codecrafters-io/course-definition-tester"
+      "Sync with source",
+      "This repository is generated from #{course.source_repo_url} using https://github.com/codecrafters-io/course-sdk"
     )
     pr.html_url
   end
@@ -74,9 +77,5 @@ class RepoSyncer
     @github_client.edit_repository(repo.full_name, default_branch: "master")
 
     repo
-  end
-
-  def source_repo_name
-    "codecrafters-io/#{File.basename(File.dirname(Dir.pwd))}"
   end
 end

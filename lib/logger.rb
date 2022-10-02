@@ -1,6 +1,6 @@
 require "colorize"
 
-module Logger
+module CustomLogger
   def log_header(msg)
     puts ""
     puts msg.blue

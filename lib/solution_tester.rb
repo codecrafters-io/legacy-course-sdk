@@ -3,12 +3,15 @@ require_relative "test_harness"
 require "tmpdir"
 
 class SolutionTester < TestHarness
-  include Logger
+  include CustomLogger
 
-  attr_reader :course, :language
+  attr_reader :course, :dockerfiles_dir, :solutions_dir, :tester_dir, :language
 
-  def initialize(course, language, stage_slugs)
+  def initialize(course:, dockerfiles_dir:, solutions_dir:, tester_dir:, language:, stage_slugs:)
     @course = course
+    @dockerfiles_dir = dockerfiles_dir
+    @solutions_dir = solutions_dir
+    @tester_dir = tester_dir
     @language = language
     @stage_slugs = stage_slugs
   end
@@ -19,7 +22,6 @@ class SolutionTester < TestHarness
     assert dockerfiles.any?, "Expected a dockerfile to exist for #{language.slug}"
 
     log_info "Building image"
-    build_image
 
     @course.stages.each do |stage|
       unless solution_exists_for_stage?(stage)
@@ -32,6 +34,7 @@ class SolutionTester < TestHarness
         next
       end
 
+      build_image(stage)
       log_info "Running tests on solution for stage #{stage.slug}"
 
       time_taken = assert_time_under(30) {
@@ -56,46 +59,33 @@ class SolutionTester < TestHarness
   end
 
   def dockerfiles
-    Dir["../dockerfiles/*.Dockerfile"]
+    Dir["#{dockerfiles_dir}/*.Dockerfile"]
       .map { |dockerfile_path| File.basename(dockerfile_path) }
       .select { |dockerfile_name| dockerfile_name.start_with?(language_pack) }
   end
 
   def language_pack
-    if language.slug.eql?("javascript")
-      "nodejs"
-    elsif language.slug.eql?("csharp")
-      "dotnet"
-    else
-      language.slug
-    end
+    language.language_pack
   end
 
   def dockerfile_path
-    "../dockerfiles/#{language_pack}-#{latest_version}.Dockerfile"
+    "#{dockerfiles_dir}/#{language_pack}-#{latest_version}.Dockerfile"
   end
 
   def solution_code_dir_for_stage(stage)
-    "../solutions/#{@language.slug}/#{stage.slug}/code"
+    "#{solutions_dir}/#{@language.slug}/#{stage.slug}/code"
   end
 
-  def starter_dir
-    "../compiled_starters/#{course.slug}-starter-#{language.slug}"
-  end
-
-  def tester_path
-    ".testers/#{course.slug}"
-  end
-
-  def build_image
+  def build_image(stage)
     assert_stdout_contains(
-      "docker build -t #{slug} -f #{dockerfile_path} #{starter_dir}",
+      "docker build -t #{slug} -f #{dockerfile_path} #{solution_code_dir_for_stage(stage)}",
       "Successfully tagged #{slug}"
     )
   end
 
   def run_tests_for_stage(stage)
-    tmp_dir = Dir.mktmpdir
+    FileUtils.mkdir_p("./tmp")
+    tmp_dir = Dir.mktmpdir("solution_tester", "./tmp")
 
     `rm -rf #{tmp_dir}`
     `cp -R #{File.expand_path(solution_code_dir_for_stage(stage))} #{tmp_dir}`
@@ -103,9 +93,9 @@ class SolutionTester < TestHarness
     command = [
       "docker run",
       "--cap-add SYS_ADMIN",
-      "-v #{tmp_dir}:/app",
-      "-v #{File.expand_path(tester_path)}:/tester:ro",
-      "-v #{File.expand_path("tests/init.sh")}:/init.sh:ro",
+      "-v #{File.expand_path(tmp_dir, ENV["HOST_COURSE_SDK_PATH"])}:/app",
+      "-v #{File.expand_path(tester_dir, ENV["HOST_COURSE_SDK_PATH"])}:/tester:ro",
+      "-v #{File.expand_path("tests/init.sh", ENV["HOST_COURSE_SDK_PATH"])}:/init.sh:ro",
       "-e CODECRAFTERS_SUBMISSION_DIR=/app",
       "-e CODECRAFTERS_COURSE_PAGE_URL=http://test-app.codecrafters.io/url",
       "-e CODECRAFTERS_CURRENT_STAGE_SLUG=#{stage.slug}",
@@ -120,6 +110,6 @@ class SolutionTester < TestHarness
   end
 
   def solution_exists_for_stage?(stage)
-    File.directory?("../solutions/#{@language.slug}/#{stage.slug}")
+    File.directory?("#{solutions_dir}/#{@language.slug}/#{stage.slug}")
   end
 end

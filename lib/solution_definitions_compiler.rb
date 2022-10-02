@@ -20,15 +20,20 @@ COMMENTED_DEFINITION_FILE_CONTENTS = <<~EOF
 EOF
 
 class SolutionDefinitionsCompiler
-  def initialize(course:, solutions_directory:)
+  def initialize(course:)
     @course = course
-    @solutions_directory = solutions_directory
   end
 
   def compile_all
     solution_directories.each do |solution_directory|
       compile_for_solution_directory(solution_directory)
     end
+  end
+
+  def compile_for_language(language)
+    solution_directories
+      .select { |solution_dir| File.dirname(File.dirname(solution_dir)).eql?(language.slug) }
+      .map { |solution_dir| compile_for_solution_directory(solution_dir) }
   end
 
   protected
@@ -45,6 +50,6 @@ class SolutionDefinitionsCompiler
   end
 
   def solution_directories
-    Dir.glob(File.join(@solutions_directory, "*", "*", "code")).map { |path| File.dirname(path) }
+    Dir.glob(File.join(@course.solutions_dir, "*", "*", "code")).map { |path| File.dirname(path) }
   end
 end

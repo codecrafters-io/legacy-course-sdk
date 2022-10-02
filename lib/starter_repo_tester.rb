@@ -2,21 +2,25 @@ require_relative "logger"
 require_relative "starter_code_uncommenter"
 
 class StarterRepoTester < TestHarness
-  include Logger
+  include CustomLogger
 
-  attr_reader :course, :language
+  attr_reader :course, :dockerfiles_dir, :starter_dir, :tester_dir, :language
 
-  def initialize(course, language)
+  def initialize(course:, dockerfiles_dir:, starter_dir:, tester_dir:, language:)
     @course = course
+    @dockerfiles_dir = dockerfiles_dir
+    @starter_dir = starter_dir
+    @tester_dir = tester_dir
     @language = language
   end
 
-  def self.from_repo_name(course, repo_name)
-    language = Language.find_by_slug!(repo_name.split("-starter-").last)
-    new(course, language)
+  def copied_starter_dir
+    @copied_starter_dir ||= Dir.mktmpdir.tap { |x| FileUtils.rmdir(x) }
   end
 
   def do_test
+    FileUtils.cp_r(starter_dir, copied_starter_dir)
+
     log_header("Testing starter: #{course.slug}-starter-#{language.slug}")
 
     assert dockerfiles.any?, "Expected a dockerfile to exist for #{slug}"
@@ -32,7 +36,7 @@ class StarterRepoTester < TestHarness
     log_success "Script output verified"
 
     log_info "Uncommenting starter code..."
-    diffs = StarterCodeUncommenter.new(starter_dir, language).uncomment
+    diffs = StarterCodeUncommenter.new(copied_starter_dir, language).uncomment
     diffs.each do |diff|
       if diff.to_s.empty?
         log_error("Expected uncommenting code to return a diff")
@@ -53,12 +57,8 @@ class StarterRepoTester < TestHarness
     log_success "Took #{time_taken} secs"
   end
 
-  def starter_dir
-    "../compiled_starters/#{course.slug}-starter-#{language.slug}"
-  end
-
   def dockerfile_path
-    "../dockerfiles/#{language_pack}-#{latest_version}.Dockerfile"
+    "#{dockerfiles_dir}/#{language_pack}-#{latest_version}.Dockerfile"
   end
 
   def latest_version
@@ -74,43 +74,34 @@ class StarterRepoTester < TestHarness
   end
 
   def dockerfiles
-    Dir["../dockerfiles/*.Dockerfile"]
+    Dir["#{dockerfiles_dir}/*.Dockerfile"]
       .map { |dockerfile_path| File.basename(dockerfile_path) }
       .select { |dockerfile_name| dockerfile_name.start_with?(language_pack) }
   end
 
   def language_pack
-    if language.slug.eql?("javascript")
-      "nodejs"
-    elsif language.slug.eql?("csharp")
-      "dotnet"
-    else
-      language.slug
-    end
-  end
-
-  def tester_path
-    ".testers/#{course.slug}"
+    language.language_pack
   end
 
   def build_image
     assert_stdout_contains(
-      "docker build -t #{slug} -f #{dockerfile_path} #{starter_dir}",
+      "docker build -t #{slug} -f #{dockerfile_path} #{copied_starter_dir}",
       "Successfully tagged #{slug}"
     )
   end
 
   def assert_script_output(expected_output, expected_exit_code = 0)
-    tmp_dir = Dir.mktmpdir
+    FileUtils.mkdir_p("./tmp")
+    tmp_dir = Dir.mktmpdir("starter_repo_tester", "./tmp")
 
     `rm -rf #{tmp_dir}`
-    `cp -R #{File.expand_path(starter_dir)} #{tmp_dir}`
+    `cp -R #{File.expand_path(copied_starter_dir)} #{tmp_dir}`
 
     command = [
       "docker run",
-      "-v #{tmp_dir}:/app",
-      "-v #{File.expand_path(tester_path)}:/tester:ro",
-      "-v #{File.expand_path("tests/init.sh")}:/init.sh:ro",
+      "-v #{File.expand_path(tmp_dir, ENV["HOST_COURSE_SDK_PATH"])}:/app",
+      "-v #{File.expand_path(tester_dir, ENV["HOST_COURSE_SDK_PATH"])}:/tester:ro",
+      "-v #{File.expand_path("tests/init.sh", ENV["HOST_COURSE_SDK_PATH"])}:/init.sh:ro",
       "-e CODECRAFTERS_SUBMISSION_DIR=/app",
       "-e CODECRAFTERS_COURSE_PAGE_URL=http://test-app.codecrafters.io/url",
       "-e CODECRAFTERS_CURRENT_STAGE_SLUG=init",
