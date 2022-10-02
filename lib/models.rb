@@ -32,7 +32,7 @@ class Course
   end
 
   def compiled_starter_repositories_dir
-    File.join(@dir, "compiled-starters")
+    File.join(@dir, "compiled_starters")
   end
 
   def solutions_dir
