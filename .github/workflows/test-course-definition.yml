@@ -62,7 +62,7 @@ jobs:
         continue-on-error: true
 
       - run: docker-compose build
-      - run: docker-compose run tester prettier --check courses/test_subject/**/*.js
+      - run: docker-compose run tester prettier --no-error-on-unmatched-pattern --check courses/test_subject/**/*.js
 
   rust_lint:
     runs-on: ubuntu-latest
