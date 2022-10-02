@@ -21,6 +21,8 @@ jobs:
         continue-on-error: true
         with:
           key: template-compilation-{hash}
+          restore-keys: |
+            template-compilation-
 
       - run: docker-compose build
       - run: docker-compose run tester ruby scripts/compile.rb courses/test_subject
@@ -45,6 +47,8 @@ jobs:
         continue-on-error: true
         with:
           key: md-lint-{hash}
+          restore-keys: |
+            md-lint-
 
       - run: docker-compose build
       - run: docker-compose run tester mdl --style relaxed courses/test_subject/compiled_starters
@@ -66,6 +70,8 @@ jobs:
         continue-on-error: true
         with:
           key: js-lint-{hash}
+          restore-keys: |
+            js-lint-
 
       - run: docker-compose build
       - run: docker-compose run tester prettier --no-error-on-unmatched-pattern --check courses/test_subject/**/*.js
@@ -126,6 +132,8 @@ jobs:
         continue-on-error: true
         with:
           key: test-${{matrix.language}}-{hash}
+          restore-keys: |
+            test-${{matrix.language}}-
 
       - run: docker-compose build
       - run: docker-compose run tester ruby scripts/test.rb courses/test_subject ${{matrix.language}}
@@ -147,6 +155,8 @@ jobs:
         continue-on-error: true
         with:
           key: validate-schemas-{hash}
+          restore-keys: |
+            validate-schemas-
 
       - run: docker-compose build
       - run: docker-compose run tester ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/test_subject/course-definition.yml
