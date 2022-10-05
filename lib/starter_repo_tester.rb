@@ -29,7 +29,7 @@ class StarterRepoTester < TestHarness
     build_image
 
     log_info "Executing starter repo script"
-    assert_time_under(15) {
+    assert_time_under(20) {
       assert_script_output("Logs from your program will appear here", expected_exit_code = 1)
     }
 
@@ -50,7 +50,7 @@ class StarterRepoTester < TestHarness
     end
 
     log_info "Executing starter repo script with first stage uncommented"
-    time_taken = assert_time_under(15) {
+    time_taken = assert_time_under(20) {
       assert_script_output("All tests ran successfully.")
     }
 
