@@ -18,10 +18,10 @@ course = Course.load_from_dir(course_dir)
 
 compilers = [
   StarterTemplateCompiler.new(course: course),
-  SolutionDiffsCompiler.new(course: course),
-  SolutionDefinitionsCompiler.new(course: course),
   FirstStageSolutionsCompiler.new(course: course),
-  FirstStageExplanationsCompiler.new(course: course)
+  FirstStageExplanationsCompiler.new(course: course),
+  SolutionDiffsCompiler.new(course: course),
+  SolutionDefinitionsCompiler.new(course: course)
 ]
 
 if language_filter
