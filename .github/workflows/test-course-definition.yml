@@ -58,6 +58,16 @@ jobs:
       - run: docker-compose build
       - run: docker-compose run tester mdl --style relaxed courses/test_subject/compiled_starters
 
+  go_lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: courses/test_subject
+
+      - run: test -z $(gofmt -l courses/test_subject) || (gofmt -l courses/test_subject && exit 1)
+
   js_lint:
     runs-on: ubuntu-latest
 
