@@ -13,11 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          path: 'courses/test_subject'
+          repository: 'codecrafters-io/course-sdk'
 
       - uses: actions/checkout@v3
         with:
-          repository: 'codecrafters-io/course-sdk'
+          path: courses/test_subject
 
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
