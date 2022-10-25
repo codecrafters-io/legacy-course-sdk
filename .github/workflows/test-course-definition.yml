@@ -20,7 +20,7 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          path: courses/test_subject
+          path: courses/${{github.event.repository.name}}
 
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
@@ -30,10 +30,10 @@ jobs:
             v2-template-compilation-
 
       - run: docker-compose build
-      - run: docker-compose run tester ruby scripts/compile.rb courses/test_subject
+      - run: docker-compose run tester ruby scripts/compile.rb courses/${{github.event.repository.name}}
 
-      - run: git -C courses/test_subject diff --exit-code # Changes to existing files
-      - run: test -z "$(git -C courses/test_subject ls-files compiled_starters/ --exclude-standard --others)" # Untracked files
+      - run: git -C courses/${{github.event.repository.name}} diff --exit-code # Changes to existing files
+      - run: test -z "$(git -C courses/${{github.event.repository.name}} ls-files compiled_starters/ --exclude-standard --others)" # Untracked files
 
   markdown_lint:
     runs-on: ubuntu-latest
@@ -46,7 +46,7 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          path: courses/test_subject
+          path: courses/${{github.event.repository.name}}
 
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
@@ -56,7 +56,7 @@ jobs:
             v2-md-lint-
 
       - run: docker-compose build
-      - run: docker-compose run tester mdl --style relaxed courses/test_subject/compiled_starters
+      - run: docker-compose run tester mdl --style relaxed courses/${{github.event.repository.name}}/compiled_starters
 
   go_lint:
     runs-on: ubuntu-latest
@@ -64,9 +64,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          path: courses/test_subject
+          path: courses/${{github.event.repository.name}}
 
-      - run: test -z $(gofmt -l courses/test_subject) || (gofmt -l courses/test_subject && exit 1)
+      - run: test -z $(gofmt -l courses/${{github.event.repository.name}}) || (gofmt -l courses/${{github.event.repository.name}} && exit 1)
 
   js_lint:
     runs-on: ubuntu-latest
@@ -79,7 +79,7 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          path: courses/test_subject
+          path: courses/${{github.event.repository.name}}
 
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
@@ -89,7 +89,7 @@ jobs:
             v2-js-lint-
 
       - run: docker-compose build
-      - run: docker-compose run tester prettier --no-error-on-unmatched-pattern --check courses/test_subject/**/*.js
+      - run: docker-compose run tester prettier --no-error-on-unmatched-pattern --check courses/${{github.event.repository.name}}/**/*.js
 
   rust_lint:
     runs-on: ubuntu-latest
@@ -102,9 +102,9 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          path: courses/test_subject
+          path: courses/${{github.event.repository.name}}
 
-      - run: find courses/test_subject -name '*.rs' | xargs rustfmt --check
+      - run: find courses/${{github.event.repository.name}} -name '*.rs' | xargs rustfmt --check
 
   identify_language_slugs:
     runs-on: ubuntu-latest
@@ -139,7 +139,7 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          path: courses/test_subject
+          path: courses/${{github.event.repository.name}}
 
       - run: "echo ::remove-matcher owner=go::" # Messes with our output
 
@@ -151,7 +151,7 @@ jobs:
             v2-test-${{matrix.language}}-
 
       - run: docker-compose build
-      - run: docker-compose run tester ruby scripts/test.rb courses/test_subject ${{matrix.language}}
+      - run: docker-compose run tester ruby scripts/test.rb courses/${{github.event.repository.name}} ${{matrix.language}}
 
   validate-schemas:
     runs-on: ubuntu-latest
@@ -164,7 +164,7 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          path: courses/test_subject
+          path: courses/${{github.event.repository.name}}
 
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
@@ -174,6 +174,6 @@ jobs:
             v2-validate-schemas-
 
       - run: docker-compose build
-      - run: docker-compose run tester ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/test_subject/course-definition.yml
-      - run: docker-compose run tester sh -c "ls courses/test_subject/solutions/*/*/definition.yml | xargs -P8 -n 1 ajv validate --spec draft2020 -s schemas/course-stage-solution-definition.json -d"
+      - run: docker-compose run tester ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/${{github.event.repository.name}}/course-definition.yml
+      - run: docker-compose run tester sh -c "ls courses/${{github.event.repository.name}}/solutions/*/*/definition.yml | xargs -P8 -n 1 ajv validate --spec draft2020 -s schemas/course-stage-solution-definition.json -d"
 
