@@ -1,4 +1,5 @@
 # Usage: ruby scripts/propagate_solution_changes.rb <course_dir>
+# TODO: This doesn't work yet!
 
 require "tempfile"
 require "tmpdir"
