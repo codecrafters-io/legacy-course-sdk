@@ -60,6 +60,10 @@ class Course
   def source_repo_url
     "https://github.com/codecrafters-io/build-your-own-#{slug}"
   end
+
+  def stages_after(course_stage)
+    stages.drop_while { |stage| stage.slug != course_stage.slug }.drop(1)
+  end
 end
 
 class Language
