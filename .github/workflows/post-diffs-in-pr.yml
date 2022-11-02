@@ -38,4 +38,12 @@ jobs:
       - name: Dump matrix context
         run: echo '${{ toJSON(matrix) }}'
 
-      - run: curl -v 'https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/comments'
+      - name: list comments
+        run: curl -sv 'https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/comments'
+      - name: create comment
+        run: >
+          curl -sv \
+            -H 'Authorization: Bearer ${{ github.token }}' \
+            -X POST \
+            'https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/comments' \
+            -d '{"body":"comment content"}'
