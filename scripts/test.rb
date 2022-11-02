@@ -1,4 +1,4 @@
-# Usage: ruby scripts/test.rb <course_dir> <language_slug>
+# Usage: ruby scripts/test.rb <course_dir> <language_slug> <stage_slugs>
 ENV["DOCKER_BUILDKIT"] = "0"
 
 require "bundler/setup"
@@ -26,7 +26,6 @@ compiled_starters_dir = File.join(course_dir, "compiled_starters")
 dockerfiles_dir = File.join(course_dir, "dockerfiles")
 
 language = Language.find_by_slug!(language_slug)
-stage_slugs ||= course.stages.map(&:slug)
 
 DOCKERFILE_NAMES_TO_SKIP = [
   "rust-1.43.Dockerfile", # Newer dependencies aren't compatible
@@ -63,9 +62,17 @@ solution_tester = SolutionTester.new(
   solutions_dir: File.join(course_dir, "solutions"),
   tester_dir: TesterDownloader.new(course: course, testers_root_dir: "./testers").download_if_needed,
   language: language,
-  stage_slugs: stage_slugs
+  stage_slugs: stage_slugs || course.stages.map(&:slug)
 )
 
-dockerfile_testers.select { |tester| tester.language.slug == language_slug }.each { |tester| tester.test || exit(1) }
-starter_repo_testers.select { |tester| tester.language.slug == language_slug }.each { |tester| tester.test || exit(1) }
-solution_tester.test || exit(1)
+testers = if stage_slugs
+            [solution_tester]
+          else
+            [
+              dockerfile_testers.select { |tester| tester.language.slug == language_slug },
+              starter_repo_testers.select { |tester| tester.language.slug == language_slug },
+              solution_tester
+            ]
+          end
+
+testers.each { |tester| tester.test || exit(1) }
