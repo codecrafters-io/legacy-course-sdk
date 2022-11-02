@@ -36,38 +36,44 @@ function collapsed {
 	echo "</details>"
 }
 
+function collapsed_file {
+	local sum="$1"
+	local obj="$2"
+
+	local content=`wrap_file "$obj"`
+	collapsed "$sum" "$content"
+}
+
 function print_both {
-	local file=$1
+	local file="$1"
 	local old="$2"
 	local new="$3"
 
 	echo file changed $file
 
-	local content=`wrap_file "$old"`
-	collapsed "old content" "$content"
+	echo old content
+	wrap_file "$old"
 
-	local content=`wrap_file "$new"`
-	collapsed "new content" "$content"
+	echo "new content"
+	wrap_file "$new"
 }
 
 function print_old {
-	local file=$1
+	local file="$1"
 	local old="$2"
 
-	echo file removed $f
+	echo file removed $file
 
-	local content=`wrap_file "$old"`
-	collapsed "content" "$content"
+	wrap_file "$old"
 }
 
 function print_new {
-	local file=$1
+	local file="$1"
 	local new="$2"
 
-	echo file created $f
+	echo file created $file
 
-	local content=`wrap_file "$new"`
-	collapsed "content" "$content"
+	wrap_file "$new"
 }
 
 function comment_text {
@@ -128,6 +134,5 @@ function make_comment {
 
 cd $REPO_PATH
 
-#comment_object
-
+#comment_object # debug call
 make_comment
