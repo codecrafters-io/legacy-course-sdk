@@ -25,9 +25,9 @@ jobs:
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
         with:
-          key: v2-template-compilation-{hash}
+          key: v3-template-compilation-{hash}
           restore-keys: |
-            v2-template-compilation-
+            v3-template-compilation-
 
       - run: docker-compose build
       - run: docker-compose run tester ruby scripts/compile.rb courses/${{github.event.repository.name}}
@@ -51,9 +51,9 @@ jobs:
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
         with:
-          key: v2-md-lint-{hash}
+          key: v3-md-lint-{hash}
           restore-keys: |
-            v2-md-lint-
+            v3-md-lint-
 
       - run: docker-compose build
       - run: docker-compose run tester mdl --style relaxed courses/${{github.event.repository.name}}/compiled_starters
@@ -84,9 +84,9 @@ jobs:
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
         with:
-          key: v2-js-lint-{hash}
+          key: v3-js-lint-{hash}
           restore-keys: |
-            v2-js-lint-
+            v3-js-lint-
 
       - run: docker-compose build
       - run: docker-compose run tester prettier --no-error-on-unmatched-pattern --check courses/${{github.event.repository.name}}/**/*.js
@@ -146,9 +146,9 @@ jobs:
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
         with:
-          key: v2-test-${{matrix.language}}-{hash}
+          key: v3-test-${{matrix.language}}-{hash}
           restore-keys: |
-            v2-test-${{matrix.language}}-
+            v3-test-${{matrix.language}}-
 
       - run: docker-compose build
       - run: docker-compose run tester ruby scripts/test.rb courses/${{github.event.repository.name}} ${{matrix.language}}
@@ -169,9 +169,9 @@ jobs:
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
         with:
-          key: v2-validate-schemas-{hash}
+          key: v3-validate-schemas-{hash}
           restore-keys: |
-            v2-validate-schemas-
+            v3-validate-schemas-
 
       - run: docker-compose build
       - run: docker-compose run tester ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/${{github.event.repository.name}}/course-definition.yml
