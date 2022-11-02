@@ -106,7 +106,7 @@ class SolutionTester < TestHarness
       "#{slug} /init.sh"
     ].join(" ")
 
-    assert_stdout_contains(command, "All tests ran successfully.")
+    assert_stdout_contains(command, "Test passed.")
   end
 
   def solution_exists_for_stage?(stage)

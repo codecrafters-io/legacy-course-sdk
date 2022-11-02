@@ -51,7 +51,7 @@ class StarterRepoTester < TestHarness
 
     log_info "Executing starter repo script with first stage uncommented"
     time_taken = assert_time_under(20) {
-      assert_script_output("All tests ran successfully.")
+      assert_script_output("Test passed.")
     }
 
     log_success "Took #{time_taken} secs"
