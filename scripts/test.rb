@@ -69,8 +69,8 @@ testers = if stage_slugs
             [solution_tester]
           else
             [
-              dockerfile_testers.select { |tester| tester.language.slug == language_slug },
-              starter_repo_testers.select { |tester| tester.language.slug == language_slug },
+              *dockerfile_testers.select { |tester| tester.language.slug == language_slug },
+              *starter_repo_testers.select { |tester| tester.language.slug == language_slug },
               solution_tester
             ]
           end
