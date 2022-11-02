@@ -12,7 +12,7 @@ function get_file {
 	local obj="$1"
 
 	file_exists "$obj" &&
-		echo git --no-pager show "$obj"
+		git --no-pager show "$obj"
 }
 
 function wrap_file {
@@ -90,11 +90,12 @@ function comment_text {
 	done
 
 	echo
-	echo $marker_text
+	echo "_${marker_text}_"
 }
 
 function find_comment {
-	curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${GITHUB_EVENT_NUMBER}/comments" | jq '.[] | select(.user.type == "Bot") | .id'
+	curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${GITHUB_EVENT_NUMBER}/comments" |
+		jq '.[] | select(.user.type == "Bot" and (.body | contains("'"$marker_text"'"))) | .id'
 }
 
 function comment_object {
@@ -125,21 +126,8 @@ function make_comment {
 	test -z "$comment_id" && create_comment || update_comment "$comment_id"
 }
 
-set +u
-
-echo env vars
-echo REPO_PATH=$REPO_PATH
-echo GITHUB_TOKEN=$GITHUB_TOKEN
-echo GITHUB_REPOSITORY=$GITHUB_REPOSITORY
-echo GITHUB_EVENT_NUMBER=$GITHUB_EVENT_NUMBER
-echo GITHUB_BASE_REF=$GITHUB_BASE_REF
-echo GITHUB_REF=$GITHUB_REF
-echo ARG_BASE_REF=$ARG_BASE_REF
-echo ARG_REF=$ARG_REF
-
-set -u
-
 cd $REPO_PATH
 
 #comment_object
+
 make_comment
