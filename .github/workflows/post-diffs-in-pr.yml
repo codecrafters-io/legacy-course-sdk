@@ -22,13 +22,6 @@ jobs:
         with:
           path: courses/${{github.event.repository.name}}
 
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-        with:
-          key: v2-template-compilation-{hash}
-          restore-keys: |
-            v2-template-compilation-
-
       - run: echo post diffs
 
       - name: Dump GitHub context
@@ -44,3 +37,5 @@ jobs:
         run: echo '${{ toJSON(strategy) }}'
       - name: Dump matrix context
         run: echo '${{ toJSON(matrix) }}'
+
+      - run: curl -v 'https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/comments'
