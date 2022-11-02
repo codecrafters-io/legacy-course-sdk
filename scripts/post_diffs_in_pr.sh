@@ -74,12 +74,7 @@ function comment_text {
 	local base_ref="$1"
 	local ref="$2"
 
-	local qwe=( ` git log --pretty=oneline -n 10` )
-	echo qwe_exit $?
-
 	local files=( ` git diff --name-only "$base_ref" "$ref" solutions/*/*/diff/**.diff ` )
-
-	echo files_exit $?
 
 	for f in "${files[@]}"; do
 		old="$base_ref:$f"
@@ -102,12 +97,16 @@ function find_comment {
 	curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${GITHUB_EVENT_NUMBER}/comments" | jq '.[] | select(.user.type == "Bot") | .id'
 }
 
+function comment_object {
+	comment_text "$ARG_BASE_REF" "$ARG_REF" | jq -sR '{body: .}'
+}
+
 function create_comment {
 	curl -sv \
 		-X POST \
 		-H "Authorization: Bearer ${GITHUB_TOKEN}" \
         "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${GITHUB_EVENT_NUMBER}/comments" \
-		-d @<(comment_text "$ARG_BASE_REF" "$ARG_REF" | jq -R '{body: .}')
+		-d @<(comment_object)
 }
 
 function update_comment {
@@ -117,7 +116,7 @@ function update_comment {
 		-X PATCH \
 		-H "Authorization: Bearer ${GITHUB_TOKEN}" \
         "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/comments/$comment_id" \
-		-d @<(comment_text "$ARG_BASE_REF" "$ARG_REF" | jq -R '{body: .}')
+		-d @<(comment_object)
 }
 
 function make_comment {
@@ -140,13 +139,7 @@ echo ARG_REF=$ARG_REF
 
 set -u
 
-pwd
-ls
-
 cd $REPO_PATH
 
-pwd
-ls
-
-comment_text $ARG_BASE_REF $ARG_REF
-#make_comment
+#comment_object
+make_comment
