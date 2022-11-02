@@ -134,5 +134,5 @@ function make_comment {
 
 cd $REPO_PATH
 
-#comment_object # debug call
+#comment_object
 make_comment

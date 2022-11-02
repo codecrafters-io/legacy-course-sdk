@@ -31,7 +31,3 @@ jobs:
           ARG_REF: ${{ github.event.pull_request.head.sha }}
           REPO_PATH: courses/${{ github.event.repository.name }}
 
-      - name: list comments
-        run: curl -sv 'https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.number }}/comments'
-
-
