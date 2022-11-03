@@ -26,6 +26,26 @@ function wrap_file {
 	} || true
 }
 
+function collapsed {
+	local summary="$1"
+	local full="$2"
+
+	echo "<details>"
+	echo "<summary>$summary</summary>"
+	echo
+	echo "$full"
+	echo "</details>"
+	echo
+}
+
+function collapsed_file {
+	local sum="$1"
+	local obj="$2"
+
+	local content=`wrap_file "$obj"`
+	collapsed "$sum" "$content"
+}
+
 function print_both {
 	local file="$1"
 	local old="$2"
@@ -33,11 +53,9 @@ function print_both {
 
 	echo file changed $file
 
-	echo old content
-	wrap_file "$old"
+	collapsed_file "old content" "$old"
 
-	echo "new content"
-	wrap_file "$new"
+	collapsed_file "new content" "$new"
 }
 
 function print_old {
@@ -46,7 +64,7 @@ function print_old {
 
 	echo file removed $file
 
-	wrap_file "$old"
+	collapsed_file "content" "$old"
 }
 
 function print_new {
@@ -55,7 +73,7 @@ function print_new {
 
 	echo file created $file
 
-	wrap_file "$new"
+	collapsed_file "content" "$new"
 }
 
 function comment_text {
