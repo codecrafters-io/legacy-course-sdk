@@ -80,21 +80,39 @@ function comment_text {
 	local base_ref="$1"
 	local ref="$2"
 
-	local files=( ` git diff --name-only "$base_ref" "$ref" solutions/*/*/diff/**.diff ` )
+	local langs=( `ls solutions` )
+	local stages=( `yq '.stages[].slug' course-definition.yml` )
 
-	for f in "${files[@]}"; do
-		old="$base_ref:$f"
-		new="$ref:$f"
+	for lang in "${langs[@]}"; do
+		local lang_files=( ` git diff --name-only "$base_ref" "$ref" solutions/"$lang"/*/diff/**.diff ` )
 
-		if file_exists "$old" && file_exists "$new"; then
-			print_both "$f" "$old" "$new"
-		elif file_exists "$old"; then
-			print_old "$f" "$old"
-		elif file_exists "$new"; then
-			print_new "$f" "$new"
-		else
-			echo WTF; exit 1
-		fi
+		test 0 -eq "${#lang_files[@]}" && continue
+
+		echo "## $lang"
+		echo
+
+		for stage in "${stages[@]}"; do
+			local files=( ` git diff --name-only "$base_ref" "$ref" solutions/"$lang"/"$stage"/diff/**.diff ` )
+
+			test 0 -eq "${#files[@]}" && continue
+
+			echo "### $stage"
+
+			for f in "${files[@]}"; do
+				old="$base_ref:$f"
+				new="$ref:$f"
+
+				if file_exists "$old" && file_exists "$new"; then
+					print_both "$f" "$old" "$new"
+				elif file_exists "$old"; then
+					print_old "$f" "$old"
+				elif file_exists "$new"; then
+					print_new "$f" "$new"
+				else
+					echo WTF; exit 1
+				fi
+			done
+		done
 	done
 
 	echo
@@ -139,6 +157,4 @@ function make_comment {
 
 cd $REPO_PATH
 
-#comment_object
-#find_comment
 make_comment
