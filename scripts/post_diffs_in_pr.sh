@@ -46,36 +46,6 @@ function collapsed_file {
 	collapsed "$sum" "$content"
 }
 
-function print_both {
-	local file="$1"
-	local old="$2"
-	local new="$3"
-
-	echo file changed $file
-
-	collapsed_file "old content" "$old"
-
-	collapsed_file "new content" "$new"
-}
-
-function print_old {
-	local file="$1"
-	local old="$2"
-
-	echo file removed $file
-
-	collapsed_file "content" "$old"
-}
-
-function print_new {
-	local file="$1"
-	local new="$2"
-
-	echo file created $file
-
-	collapsed_file "content" "$new"
-}
-
 function comment_text {
 	local base_ref="$1"
 	local ref="$2"
@@ -97,20 +67,16 @@ function comment_text {
 			test 0 -eq "${#files[@]}" && continue
 
 			echo "### $stage"
+			echo
 
 			for f in "${files[@]}"; do
 				old="$base_ref:$f"
 				new="$ref:$f"
 
-				if file_exists "$old" && file_exists "$new"; then
-					print_both "$f" "$old" "$new"
-				elif file_exists "$old"; then
-					print_old "$f" "$old"
-				elif file_exists "$new"; then
-					print_new "$f" "$new"
-				else
-					echo WTF; exit 1
-				fi
+				echo '`'$f'`'
+
+				file_exists "$old" && collapsed_file "old content" "$old"
+				file_exists "$new" && collapsed_file "new content" "$new"
 			done
 		done
 	done
