@@ -109,7 +109,7 @@ function find_comment {
 }
 
 function comment_object {
-	comment_text "$ARG_BASE_REF" "$ARG_REF" | jq -sR '{body: .}'
+	comment_text "$GITHUB_BASE_REF" "$GITHUB_REF" | jq -sR '{body: .}'
 }
 
 function create_comment {

@@ -27,7 +27,5 @@ jobs:
         env:
           GITHUB_TOKEN: '${{ github.token }}'
           GITHUB_EVENT_NUMBER: ${{ github.event.number }}
-          ARG_BASE_REF: ${{ github.event.pull_request.base.sha }}
-          ARG_REF: ${{ github.event.pull_request.head.sha }}
           REPO_PATH: courses/${{ github.event.repository.name }}
 
