@@ -26,24 +26,6 @@ function wrap_file {
 	} || true
 }
 
-function collapsed {
-	local summary="$1"
-	local full="$2"
-
-	echo "<details>"
-	echo "<summary>$summary</summary>"
-	echo "$full"
-	echo "</details>"
-}
-
-function collapsed_file {
-	local sum="$1"
-	local obj="$2"
-
-	local content=`wrap_file "$obj"`
-	collapsed "$sum" "$content"
-}
-
 function print_both {
 	local file="$1"
 	local old="$2"
@@ -86,22 +68,26 @@ function comment_text {
 		old="$base_ref:$f"
 		new="$ref:$f"
 
-		file_exists "$old" && file_exists "$new" && print_both "$f" "$old" "$new" || {
-			file_exists "$old" && print_old "$f" "$old" || {
-				file_exists "$new" && print_new "$f" "$new" || {
-					echo WTF; exit 1
-				}
-			}
-		}
+		if file_exists "$old" && file_exists "$new"; then
+			print_both "$f" "$old" "$new"
+		elif file_exists "$old"; then
+			print_old "$f" "$old"
+		elif file_exists "$new"; then
+			print_new "$f" "$new"
+		else
+			echo WTF; exit 1
+		fi
 	done
 
 	echo
+	echo "---"
+	echo "_Posted by post_diffs_in_pr [codecrafters](https://github.com/codecrafters-io) Bot_"
 	echo "_${marker_text}_"
 }
 
 function find_comment {
 	curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${GITHUB_EVENT_NUMBER}/comments" |
-		jq '.[] | select(.user.type == "Bot" and (.body | contains("'"$marker_text"'"))) | .id'
+		jq '[.[] | select(.user.type == "Bot" and (.body | contains("'"$marker_text"'")))][:1] | .[] | .id'
 }
 
 function comment_object {
@@ -135,4 +121,5 @@ function make_comment {
 cd $REPO_PATH
 
 #comment_object
+#find_comment
 make_comment
