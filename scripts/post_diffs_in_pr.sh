@@ -99,6 +99,7 @@ function comment_text {
 
 	echo
 	echo "---"
+	echo '`'"diff $base_ref $ref"'`'
 	echo "_Posted by post_diffs_in_pr [codecrafters](https://github.com/codecrafters-io) Bot_"
 	echo "_${marker_text}_"
 }
@@ -109,7 +110,7 @@ function find_comment {
 }
 
 function comment_object {
-	comment_text "$GITHUB_BASE_REF" "$GITHUB_REF" | jq -sR '{body: .}'
+	comment_text "$GITHUB_BASE_REF_SHA" "$GITHUB_REF_SHA" | jq -sR '{body: .}'
 }
 
 function create_comment {

@@ -23,9 +23,11 @@ jobs:
           path: courses/${{ github.event.repository.name }}
           fetch-depth: 100
 
-      - run: bash -x ./scripts/post_diffs_in_pr.sh
+      - run: ./scripts/post_diffs_in_pr.sh
         env:
           GITHUB_TOKEN: '${{ github.token }}'
           GITHUB_EVENT_NUMBER: ${{ github.event.number }}
+          GITHUB_BASE_REF_SHA: ${{ github.event.pull_request.base.sha }}
+          GITHUB_REF_SHA: ${{ github.event.pull_request.head.sha }}
           REPO_PATH: courses/${{ github.event.repository.name }}
 
