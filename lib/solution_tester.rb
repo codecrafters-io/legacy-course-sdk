@@ -37,7 +37,7 @@ class SolutionTester < TestHarness
       build_image(stage)
       log_info "Running tests on solution for stage #{stage.slug}"
 
-      time_taken = assert_time_under(30) {
+      time_taken = assert_time_under(60) {
         run_tests_for_stage(stage)
       }
 
