@@ -46,6 +46,17 @@ function collapsed_file {
 	collapsed "$sum" "$content"
 }
 
+function has_diffs {
+	local base_ref="$1"
+	local ref="$2"
+
+	! git diff --quiet "$base_ref" "$ref" solutions/**/diff/**.diff
+}
+
+function has_diffs_current {
+	has_diffs "$GITHUB_BASE_REF_SHA" "$GITHUB_REF_SHA"
+}
+
 function comment_text {
 	local base_ref="$1"
 	local ref="$2"
@@ -58,15 +69,16 @@ function comment_text {
 
 		test 0 -eq "${#lang_files[@]}" && continue
 
-		echo "## $lang"
-		echo
+		local stage_num=0
 
 		for stage in "${stages[@]}"; do
-			local files=( ` git diff --name-only "$base_ref" "$ref" solutions/"$lang"/"$stage"/diff/**.diff ` )
+			stage_num=`expr $stage_num + 1`
+
+			local files=( ` git diff --name-only "$base_ref" "$ref" solutions/"$lang"/*"$stage"/diff/**.diff ` )
 
 			test 0 -eq "${#files[@]}" && continue
 
-			echo "### $stage"
+			echo "### Stage $stage_num: $stage ($lang)"
 			echo
 
 			for f in "${files[@]}"; do
@@ -83,9 +95,9 @@ function comment_text {
 
 	echo
 	echo "---"
-	echo '`'"diff $base_ref $ref"'`'
-	echo "_Posted by post_diffs_in_pr [codecrafters](https://github.com/codecrafters-io) Bot_"
-	echo "_${marker_text}_"
+	echo "Posted via [course-sdk](https://github.com/codecrafters-io/course-sdk/blob/$SDK_REF/.github/workflows/post-diffs-in-pr.yml)."
+	echo "<!-- diff $base_ref $ref -->"
+	echo "<!-- ${marker_text} -->"
 }
 
 function find_comment {
@@ -101,7 +113,7 @@ function create_comment {
 	curl -sv \
 		-X POST \
 		-H "Authorization: Bearer ${GITHUB_TOKEN}" \
-        "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${GITHUB_EVENT_NUMBER}/comments" \
+		"https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${GITHUB_EVENT_NUMBER}/comments" \
 		-d @<(comment_object)
 }
 
@@ -111,14 +123,27 @@ function update_comment {
 	curl -sv \
 		-X PATCH \
 		-H "Authorization: Bearer ${GITHUB_TOKEN}" \
-        "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/comments/$comment_id" \
+		"https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/comments/$comment_id" \
 		-d @<(comment_object)
+}
+
+function delete_comment {
+	local comment_id="$1"
+
+	curl -sv \
+		-X DELETE \
+		-H "Authorization: Bearer ${GITHUB_TOKEN}" \
+		"https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/comments/$comment_id"
 }
 
 function make_comment {
 	comment_id=`find_comment`
 
-	test -z "$comment_id" && create_comment || update_comment "$comment_id"
+	if has_diffs_current; then
+		test -z "$comment_id" && create_comment || update_comment "$comment_id"
+	elif test -n "$comment_id"; then
+		delete_comment "$comment_id"
+	fi
 }
 
 cd $REPO_PATH

@@ -30,4 +30,5 @@ jobs:
           GITHUB_BASE_REF_SHA: ${{ github.event.pull_request.base.sha }}
           GITHUB_REF_SHA: ${{ github.event.pull_request.head.sha }}
           REPO_PATH: courses/${{ github.event.repository.name }}
+          SDK_REF: ${{ inputs.sdkRef }}
 
