@@ -26,6 +26,7 @@ class RepoSyncer
 
     gh_files = file_paths.map do |file_path|
       file_contents = File.read(file_path)
+      puts file_path
 
       {
         path: Pathname.new(file_path).relative_path_from(Pathname.new(directory)),
