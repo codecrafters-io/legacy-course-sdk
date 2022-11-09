@@ -14,6 +14,7 @@ syncer = RepoSyncer.new(github_client)
 
 Dir["#{course_dir}/compiled_starters/*"].each do |dir|
   repo_name = File.basename(dir)
+  puts `ls -la #{dir}`
   puts "Syncing #{repo_name}"
   pr_url = syncer.sync(course, repo_name, dir)
   if pr_url
