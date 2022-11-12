@@ -50,7 +50,7 @@ function has_diffs {
 	local base_ref="$1"
 	local ref="$2"
 
-	! git diff --quiet "$base_ref" "$ref" solutions/**/diff/**.diff
+	! git diff --quiet --diff-filter=ACDM "$base_ref" "$ref" solutions/**/diff/**.diff
 }
 
 function has_diffs_current {
@@ -65,7 +65,7 @@ function comment_text {
 	local stages=( `yq '.stages[].slug' course-definition.yml` )
 
 	for lang in "${langs[@]}"; do
-		local lang_files=( ` git diff --name-only "$base_ref" "$ref" solutions/"$lang"/*/diff/**.diff ` )
+		local lang_files=( ` git diff --diff-filter=ACDM --name-only "$base_ref" "$ref" solutions/"$lang"/*/diff/**.diff ` )
 
 		test 0 -eq "${#lang_files[@]}" && continue
 
@@ -74,7 +74,7 @@ function comment_text {
 		for stage in "${stages[@]}"; do
 			stage_num=`expr $stage_num + 1`
 
-			local files=( ` git diff --name-only "$base_ref" "$ref" solutions/"$lang"/*"$stage"/diff/**.diff ` )
+			local files=( ` git diff --diff-filter=ACDM --name-only "$base_ref" "$ref" solutions/"$lang"/*"$stage"/diff/**.diff ` )
 
 			test 0 -eq "${#files[@]}" && continue
 
@@ -148,4 +148,8 @@ function make_comment {
 
 cd $REPO_PATH
 
-make_comment
+if test $# -eq 0; then
+	make_comment
+else
+	"$@"
+fi
