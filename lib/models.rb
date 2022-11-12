@@ -68,6 +68,18 @@ class Course
   def stages_after(course_stage)
     stages.drop_while { |stage| stage.slug != course_stage.slug }.drop(1)
   end
+
+  def stage_path(language, stage, *path)
+    stage_dir = [
+      "%02d-%s" % [stage.number, stage.slug],
+      "%d-%s" % [stage.number, stage.slug],
+      stage.slug,
+    ].detect { |name| File.directory?(File.join(solutions_dir, language.slug, name)) }
+
+    return "" if stage_dir.nil?
+
+    File.join(solutions_dir, language.slug, stage_dir, *path)
+  end
 end
 
 class Language

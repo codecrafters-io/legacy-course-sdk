@@ -28,33 +28,21 @@ class SolutionDiffsCompiler
     end
   end
 
-  def stage_dir(language, stage, *path)
-    stage_dir = [
-      "%02d-%s" % [stage.number, stage.slug],
-      "%d-%s" % [stage.number, stage.slug],
-      stage.slug,
-    ].detect { |name| File.directory?(File.join(@course.solutions_dir, language.slug, name)) }
-
-    return "" if stage_dir.nil?
-
-    File.join(@course.solutions_dir, language.slug, stage_dir, *path)
-  end
-
   def compile_for_language(language)
     puts "compiling solution diffs for #{@course.slug}-#{language.slug}"
 
     [[nil, @course.first_stage], *@course.stages.each_cons(2)].each do |previous_stage, next_stage|
       previous_stage_code_directory = if previous_stage
-        stage_dir(language, previous_stage, "code")
+        @course.stage_path(language, previous_stage, "code")
       else
         starter_directory_for(language)
       end
 
-      next_stage_code_directory = stage_dir(language, next_stage, "code")
+      next_stage_code_directory = @course.stage_path(language, next_stage, "code")
 
       next unless File.directory?(previous_stage_code_directory) && File.directory?(next_stage_code_directory)
 
-      next_stage_diff_directory = stage_dir(language, next_stage, "diff")
+      next_stage_diff_directory = @course.stage_path(language, next_stage, "diff")
       FileUtils.rm_rf(next_stage_diff_directory) if File.exist?(next_stage_diff_directory)
       FileUtils.mkdir_p(next_stage_diff_directory)
 
