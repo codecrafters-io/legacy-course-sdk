@@ -33,16 +33,16 @@ class SolutionDiffsCompiler
 
     [[nil, @course.first_stage], *@course.stages.each_cons(2)].each do |previous_stage, next_stage|
       previous_stage_code_directory = if previous_stage
-        @course.stage_path(language, previous_stage, "code")
+        File.join(@course.solutions_dir, language.slug, previous_stage.solution_dir, "code")
       else
         starter_directory_for(language)
       end
 
-      next_stage_code_directory = @course.stage_path(language, next_stage, "code")
+      next_stage_code_directory = File.join(@course.solutions_dir, language.slug, next_stage.solution_dir, "code")
 
-      next unless File.directory?(previous_stage_code_directory) && File.directory?(next_stage_code_directory)
+      next unless File.directory?(next_stage_code_directory)
 
-      next_stage_diff_directory = @course.stage_path(language, next_stage, "diff")
+      next_stage_diff_directory = File.join(@course.solutions_dir, language.slug, next_stage.solution_dir, "diff")
       FileUtils.rm_rf(next_stage_diff_directory) if File.exist?(next_stage_diff_directory)
       FileUtils.mkdir_p(next_stage_diff_directory)
 

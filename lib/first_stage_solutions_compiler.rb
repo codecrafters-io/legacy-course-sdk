@@ -23,7 +23,7 @@ class FirstStageSolutionsCompiler
 
   def compile_for_starter_repository_directory(starter_repository_directory)
     language = Language.find_by_slug!(File.basename(starter_repository_directory).split("-").last)
-    code_directory = @course.stage_path(language, @course.first_stage, "code")
+    code_directory = File.join(@course.solutions_dir, language.slug, @course.first_stage.solution_dir, "code")
 
     FileUtils.rm_rf(code_directory) if File.exist?(code_directory)
     FileUtils.mkdir_p(code_directory)
