@@ -24,7 +24,7 @@ class FirstStageExplanationsCompiler
 
   def compile_for_starter_repository_directory(starter_repository_directory)
     language = Language.find_by_slug!(File.basename(starter_repository_directory).split("-").last)
-    explanation_file_path = File.join(@course.solutions_dir, language.slug, @course.first_stage.slug, "explanation.md")
+    explanation_file_path = File.join(@course.solutions_dir, language.slug, @course.first_stage.dir_name, "explanation.md")
 
     File.delete(explanation_file_path) if File.exist?(explanation_file_path)
     FileUtils.mkdir_p(File.dirname(explanation_file_path))

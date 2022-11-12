@@ -10,6 +10,10 @@ class CourseStage
     @number = number
     @name = name
   end
+
+  def dir_name
+    "%02d-%s" % [@number, @slug]
+  end
 end
 
 class Course
