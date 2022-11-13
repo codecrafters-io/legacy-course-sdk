@@ -118,7 +118,7 @@ jobs:
       - name: Generate Language Slugs
         id: generate-language-slugs
         run: |
-          LANGUAGE_SLUGS=$(ls solutions | xargs -I {} echo \"{}\" | jq -n '. |= [inputs]' | tr -d '\n')
+          LANGUAGE_SLUGS=$(ls solutions | jq -Rnc '[inputs]')
           echo ::set-output name=language_slugs::${LANGUAGE_SLUGS}
 
   test:
