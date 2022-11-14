@@ -13,7 +13,6 @@ test -f course-definition.yml || {
 
 stages_json=$( yq -o=j course-definition.yml | jq -c '.stages | keys[] as $i | {index: $i, slug: .[$i].slug}' )
 stages_new=$( echo "$stages_json" | jq -r '["printf", "%02d-%s\\n", (.index + 1), .slug] | @sh' | sh )
-stages_old=$( echo "$stages_json" | jq -r '.slug' )
 
 function contains {
 	local set="$1"
@@ -27,14 +26,12 @@ status=0
 for lang in `ls "solutions"`; do
 	for dir in `ls "solutions/$lang"`; do
 		if contains "$stages_new" "$dir"; then
-			true
-		elif contains "$stages_old" "$dir"; then
-			echo >&2 "old style naming: $lang/$dir"
-			status=1
-		else
-			echo >&2 "unexpected file: $lang/$dir"
-			status=1
+			continue
 		fi
+
+		echo -n "unexpected file: $lang/$dir"
+		echo ", expected format: <two_digit_stage_number>-<stage_slug> (ex: \"01-init\")"
+		status=1
 	done
 done
 
