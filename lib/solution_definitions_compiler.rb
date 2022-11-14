@@ -40,7 +40,7 @@ class SolutionDefinitionsCompiler
 
   def compile_for_solution_directory(solution_directory)
     language = Language.find_by_slug!(File.basename(File.dirname(solution_directory)))
-    stage = @course.stages.detect { |stage| stage.slug.eql?(File.basename(solution_directory)) }
+    stage = @course.stages.detect { |stage| stage.solution_dir.eql?(File.basename(solution_directory)) }
     definition_file_path = File.join(solution_directory, "definition.yml")
 
     unless File.exist?(definition_file_path)

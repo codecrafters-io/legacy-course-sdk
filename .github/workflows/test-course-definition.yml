@@ -118,7 +118,7 @@ jobs:
       - name: Generate Language Slugs
         id: generate-language-slugs
         run: |
-          LANGUAGE_SLUGS=$(ls solutions | xargs -I {} echo \"{}\" | jq -n '. |= [inputs]' | tr -d '\n')
+          LANGUAGE_SLUGS=$(ls solutions | jq -Rnc '[inputs]')
           echo ::set-output name=language_slugs::${LANGUAGE_SLUGS}
 
   test:
@@ -177,3 +177,17 @@ jobs:
       - run: docker-compose run tester ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/${{github.event.repository.name}}/course-definition.yml
       - run: docker-compose run tester sh -c "ls courses/${{github.event.repository.name}}/solutions/*/*/definition.yml | xargs -P8 -n 1 ajv validate --spec draft2020 -s schemas/course-stage-solution-definition.json -d"
 
+  validate-stages-naming:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: 'codecrafters-io/course-sdk'
+          ref: ${{inputs.sdkRef}}
+
+      - uses: actions/checkout@v3
+        with:
+          path: courses/${{github.event.repository.name}}
+
+      - run: scripts/validate_stages_naming.sh "courses/${{github.event.repository.name}}"

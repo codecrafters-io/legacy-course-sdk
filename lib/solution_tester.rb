@@ -73,7 +73,7 @@ class SolutionTester < TestHarness
   end
 
   def solution_code_dir_for_stage(stage)
-    "#{solutions_dir}/#{@language.slug}/#{stage.slug}/code"
+    "#{solutions_dir}/#{@language.slug}/#{stage.solution_dir}/code"
   end
 
   def build_image(stage)
@@ -110,6 +110,6 @@ class SolutionTester < TestHarness
   end
 
   def solution_exists_for_stage?(stage)
-    File.directory?("#{solutions_dir}/#{@language.slug}/#{stage.slug}")
+    File.directory?("#{solutions_dir}/#{@language.slug}/#{stage.solution_dir}")
   end
 end
