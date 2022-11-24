@@ -104,7 +104,7 @@ jobs:
         with:
           path: courses/${{github.event.repository.name}}
 
-      - run: find courses/${{github.event.repository.name}} -name '*.rs' | xargs rustfmt --check
+      - run: find courses/${{github.event.repository.name}} -name '*.rs' | xargs rustfmt --edition "2021" --check
 
   identify_language_slugs:
     runs-on: ubuntu-latest
