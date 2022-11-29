@@ -141,6 +141,9 @@ function delete_comment {
 function make_comment {
 	comment_id=`find_comment`
 
+	has_diffs_current && echo "diffs found" || echo "no diffs found"
+	git diff --name-status --diff-filter=ACDM "$GITHUB_BASE_REF_SHA" "$GITHUB_REF_SHA" solutions/**/diff/**.diff || true
+
 	if has_diffs_current; then
 		test -z "$comment_id" && create_comment || update_comment "$comment_id"
 	elif test -n "$comment_id"; then
