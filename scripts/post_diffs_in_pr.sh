@@ -97,6 +97,8 @@ function comment_text {
 	echo "---"
 	echo "Posted via [course-sdk](https://github.com/codecrafters-io/course-sdk/blob/$SDK_REF/.github/workflows/post-diffs-in-pr.yml)."
 	echo "<!-- diff $base_ref $ref -->"
+	echo "<!-- run $GITHUB_RUN_NUMBER ($GITHUB_RUN_ID) attempt $GITHUB_RUN_ATTEMPT -->"
+	echo "<!-- actor $GITHUB_ACTOR -->"
 	echo "<!-- ${marker_text} -->"
 }
 
