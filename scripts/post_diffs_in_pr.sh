@@ -50,7 +50,7 @@ function has_diffs {
 	local base_ref="$1"
 	local ref="$2"
 
-	! git diff --quiet --diff-filter=ACDM "$base_ref" "$ref" solutions/**/diff/**.diff
+	! git diff --quiet --diff-filter=ACDM "$base_ref" "$ref" 'solutions/**/diff/**.diff'
 }
 
 function has_diffs_current {
@@ -65,7 +65,7 @@ function comment_text {
 	local stages=( `yq '.stages[].slug' course-definition.yml` )
 
 	for lang in "${langs[@]}"; do
-		local lang_files=( ` git diff --diff-filter=ACDM --name-only "$base_ref" "$ref" solutions/"$lang"/*/diff/**.diff ` )
+		local lang_files=( ` git diff --diff-filter=ACDM --name-only "$base_ref" "$ref" solutions/"$lang"'/*/diff/**.diff' ` )
 
 		test 0 -eq "${#lang_files[@]}" && continue
 
@@ -73,8 +73,9 @@ function comment_text {
 
 		for stage in "${stages[@]}"; do
 			stage_num=`expr $stage_num + 1`
+			stage_path=`printf "%02d-%s" "$stage_num" "$stage"`
 
-			local files=( ` git diff --diff-filter=ACDM --name-only "$base_ref" "$ref" solutions/"$lang"/*"$stage"/diff/**.diff ` )
+			local files=( ` git diff --diff-filter=ACDM --name-only "$base_ref" "$ref" solutions/"$lang"/"$stage_path"'/diff/**.diff' ` )
 
 			test 0 -eq "${#files[@]}" && continue
 
@@ -107,8 +108,12 @@ function find_comment {
 		jq '[.[] | select(.user.type == "Bot" and (.body | contains("'"$marker_text"'")))][:1] | .[] | .id'
 }
 
+function comment_text_current {
+	comment_text "$GITHUB_BASE_REF_SHA" "$GITHUB_REF_SHA"
+}
+
 function comment_object {
-	comment_text "$GITHUB_BASE_REF_SHA" "$GITHUB_REF_SHA" | jq -sR '{body: .}'
+	comment_text_current | jq -sR '{body: .}'
 }
 
 function create_comment {
@@ -145,7 +150,7 @@ function make_comment {
 	git log --pretty=oneline --graph -20
 
 	has_diffs_current && echo "diffs found" || echo "no diffs found"
-	git diff --name-status --diff-filter=ACDM "$GITHUB_BASE_REF_SHA" "$GITHUB_REF_SHA" solutions/**/diff/**.diff || true
+	git diff --name-status --diff-filter=ACDM "$GITHUB_BASE_REF_SHA" "$GITHUB_REF_SHA" 'solutions/**/diff/**.diff' || true
 
 	if has_diffs_current; then
 		test -z "$comment_id" && create_comment || update_comment "$comment_id"
