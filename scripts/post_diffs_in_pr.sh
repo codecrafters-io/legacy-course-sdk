@@ -166,7 +166,11 @@ function make_comment {
 	git diff --name-status --diff-filter=ACDM "$GITHUB_BASE_REF_SHA" "$GITHUB_REF_SHA" 'solutions/**/diff/**.diff' || true
 
 	if has_diffs_current; then
-		test -z "$comment_id" && create_comment || update_comment "$comment_id"
+		if test -z "$comment_id"; then
+			create_comment
+		else
+			update_comment "$comment_id"
+		fi
 	elif test -n "$comment_id"; then
 		delete_comment "$comment_id"
 	fi
