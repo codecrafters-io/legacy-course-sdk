@@ -116,8 +116,21 @@ function comment_object {
 	comment_text_current | jq -sR '{body: .}'
 }
 
+function curl_base {
+	local request=`mktemp`
+	local body=`mktemp`
+	local status=`mktemp`
+
+	echo >&2 curl -sv "$@"
+
+	curl -sv -o "$body" -w '%{json}' "$@" >"$status"
+
+	cat >&2 "$body"
+	cat "$status" | jq -e '.response_code | . == 200 or . == 201' > /dev/null
+}
+
 function create_comment {
-	curl -sv \
+	curl_base \
 		-X POST \
 		-H "Authorization: Bearer ${GITHUB_TOKEN}" \
 		"https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${GITHUB_EVENT_NUMBER}/comments" \
@@ -127,7 +140,7 @@ function create_comment {
 function update_comment {
 	local comment_id="$1"
 
-	curl -sv \
+	curl_base \
 		-X PATCH \
 		-H "Authorization: Bearer ${GITHUB_TOKEN}" \
 		"https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/comments/$comment_id" \
@@ -137,7 +150,7 @@ function update_comment {
 function delete_comment {
 	local comment_id="$1"
 
-	curl -sv \
+	curl_base \
 		-X DELETE \
 		-H "Authorization: Bearer ${GITHUB_TOKEN}" \
 		"https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/comments/$comment_id"
