@@ -159,7 +159,9 @@ function delete_comment {
 function make_comment {
 	comment_id=`find_comment`
 
-	echo git status
+	echo workflow commit `git rev-parse HEAD`
+
+	echo git history
 	git log --pretty=oneline --graph -20
 
 	has_diffs_current && echo "diffs found" || echo "no diffs found"
