@@ -31,6 +31,7 @@ DOCKERFILE_NAMES_TO_SKIP = [
   "rust-1.43.Dockerfile", # Newer dependencies aren't compatible
   "rust-1.54.Dockerfile", # Newer dependencies aren't compatible
   "haskell-8.8.Dockerfile", # Newer dependencies aren't compatible
+  "haskell-9.0.Dockerfile", # Newer dependencies aren't compatible
   "go-1.13.Dockerfile", # too old, not officially supported
 ]
 
