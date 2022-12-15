@@ -143,13 +143,13 @@ jobs:
 
       - run: "echo ::remove-matcher owner=go::" # Messes with our output
 
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-        with:
-          key: v3-test-${{matrix.language}}-{hash}
-          restore-keys: |
-            v3-test-${{matrix.language}}-
-
+#      - uses: satackey/action-docker-layer-caching@v0.0.11
+#        continue-on-error: true
+#        with:
+#          key: v3-test-${{matrix.language}}-{hash}
+#          restore-keys: |
+#            v3-test-${{matrix.language}}-
+#
       - run: docker-compose build
       - run: docker-compose run tester ruby scripts/test.rb courses/${{github.event.repository.name}} ${{matrix.language}}
 
