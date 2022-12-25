@@ -126,7 +126,7 @@ function curl_base {
 	curl -sv -o "$body" -w '%{json}' "$@" >"$status"
 
 	cat >&2 "$body"
-	cat "$status" | jq -e '.response_code | . == 200 or . == 201' > /dev/null
+	cat "$status" | jq -e '.response_code | . >= 200 and . < 300' > /dev/null
 }
 
 function create_comment {
