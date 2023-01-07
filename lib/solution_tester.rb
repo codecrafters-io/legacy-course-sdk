@@ -93,16 +93,17 @@ class SolutionTester < TestHarness
     command = [
       "docker run",
       "--cap-add SYS_ADMIN",
-      "-v '#{File.expand_path(tmp_dir, ENV["HOST_COURSE_SDK_PATH"])}:/app'",
+      "-v '#{File.expand_path(tmp_dir, ENV["HOST_COURSE_SDK_PATH"])}:/app:ro'",
       "-v '#{File.expand_path(tester_dir, ENV["HOST_COURSE_SDK_PATH"])}:/tester:ro'",
       "-v '#{File.expand_path("tests/init.sh", ENV["HOST_COURSE_SDK_PATH"])}:/init.sh:ro'",
-      "-e CODECRAFTERS_SUBMISSION_DIR=/app",
+      "--tmpfs /tmp:exec",
       "-e CODECRAFTERS_COURSE_PAGE_URL=http://test-app.codecrafters.io/url",
       "-e CODECRAFTERS_CURRENT_STAGE_SLUG=#{stage.slug}",
       "-e TESTER_DIR=/tester",
       "-w /app",
       "--memory=2g",
       "--cpus=0.5",
+      "--read-only",
       "#{slug} /init.sh"
     ].join(" ")
 
