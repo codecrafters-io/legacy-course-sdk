@@ -151,9 +151,7 @@ jobs:
 #            v3-test-${{matrix.language}}-
 #
       - run: docker-compose build
-      - run: docker-compose run tester ruby scripts/test.rb courses/${{github.event.repository.name}} ${{matrix.language}}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: docker-compose run -e GITHUB_TOKEN=${{github.token}} tester ruby scripts/test.rb courses/${{github.event.repository.name}} ${{matrix.language}}
 
 
   validate-schemas:
