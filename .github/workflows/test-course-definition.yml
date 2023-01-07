@@ -152,6 +152,9 @@ jobs:
 #
       - run: docker-compose build
       - run: docker-compose run tester ruby scripts/test.rb courses/${{github.event.repository.name}} ${{matrix.language}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
   validate-schemas:
     runs-on: ubuntu-latest
