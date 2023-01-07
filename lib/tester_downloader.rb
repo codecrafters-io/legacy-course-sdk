@@ -14,6 +14,7 @@ class TesterDownloader
 
     File.open(compressed_file_path, "wb") do |file|
       artifact_url = "https://github.com/#{tester_repository_name}/releases/download/#{latest_tester_version}/#{latest_tester_version}_linux_amd64.tar.gz"
+      puts "Downloading #{artifact_url}"
 
       HTTParty.get(artifact_url, stream_body: true, follow_redirects: true) do |fragment|
         file.write(fragment)
