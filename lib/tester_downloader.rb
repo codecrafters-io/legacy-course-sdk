@@ -11,16 +11,19 @@ class TesterDownloader
     compressed_file_path = File.join(@testers_root_dir, "#{@course.slug}.tar.gz")
 
     FileUtils.mkdir_p(@testers_root_dir)
+
     File.open(compressed_file_path, "wb") do |file|
       artifact_url = "https://github.com/#{tester_repository_name}/releases/download/#{latest_tester_version}/#{latest_tester_version}_linux_amd64.tar.gz"
 
-      HTTParty.get(artifact_url, stream_body: true) do |fragment|
+      HTTParty.get(artifact_url, stream_body: true, follow_redirects: true) do |fragment|
         file.write(fragment)
       end
     end
 
     FileUtils.mkdir_p(tester_dir)
     `tar xf #{compressed_file_path} -C #{tester_dir}`
+    raise "failed to extract archive" unless $?.to_i.eql?(0)
+
     File.delete(compressed_file_path)
 
     tester_dir
