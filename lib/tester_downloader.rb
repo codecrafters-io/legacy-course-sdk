@@ -22,7 +22,10 @@ class TesterDownloader
 
     FileUtils.mkdir_p(tester_dir)
     `tar xf #{compressed_file_path} -C #{tester_dir}`
-    raise "failed to extract archive" unless $?.to_i.eql?(0)
+    unless $?.to_i.eql?(0)
+      puts File.read(compressed_file_path)[0..100]
+      raise "failed to extract archive"
+    end
 
     File.delete(compressed_file_path)
 
