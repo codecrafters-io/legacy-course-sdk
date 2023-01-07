@@ -36,6 +36,7 @@ class TesterDownloader
   def latest_tester_version
     @latest_tester_version ||= begin
       latest_release = HTTParty.get("https://api.github.com/repos/#{tester_repository_name}/releases/latest")
+      puts "Latest release JSON: #{latest_release}"
       latest_release["tag_name"]
     end
   end
