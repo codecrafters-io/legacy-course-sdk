@@ -26,4 +26,10 @@ Run this command to compile and test Go solutions:
 $ docker compose run tester scripts/compile_and_test.sh courses/build-your-own-git go
 ```
 
+If you only want to test solutions for specific stage(s):
+
+```sh
+$ docker compose run tester scripts/compile_and_test.sh courses/build-your-own-git go stage_slug_1,stage_slug_2
+```
+
 If you're running an older version of Docker, use `docker-compose` instead of `docker compose`.
