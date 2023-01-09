@@ -35,14 +35,11 @@ class TesterDownloader
   def latest_tester_version
     @latest_tester_version ||= begin
                                  latest_release = if ENV["GITHUB_TOKEN"].nil?
-                                                    puts "not using GITHUB_TOKEN"
                                                     HTTParty.get("https://api.github.com/repos/#{tester_repository_name}/releases/latest")
                                                   else
-                                                    puts "using GITHUB_TOKEN"
                                                     HTTParty.get("https://api.github.com/repos/#{tester_repository_name}/releases/latest", headers: { "Authorization" => "Bearer #{ENV["GITHUB_TOKEN"]}" })
                                                   end
 
-                                 puts "Latest release JSON: #{latest_release}"
                                  latest_release["tag_name"]
                                end
   end
