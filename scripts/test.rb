@@ -14,7 +14,7 @@ require_relative "../lib/models"
 
 course_dir = ARGV[0]
 language_slug = ARGV[1]
-stage_slugs = ARGV[2]&.split(",")
+stage_slugs = (ARGV[2] || "").split(",")
 
 unless course_dir && language_slug
   puts "Usage: ruby scripts/test.rb <course-directory> <language-slug> [stage-slugs]"
@@ -63,11 +63,15 @@ solution_tester = SolutionTester.new(
   solutions_dir: File.join(course_dir, "solutions"),
   tester_dir: TesterDownloader.new(course: course, testers_root_dir: "./testers").download_if_needed,
   language: language,
-  stage_slugs: stage_slugs || course.stages.map(&:slug)
+  stage_slugs: stage_slugs.any? ? stage_slugs : course.stages.map(&:slug)
 )
 
-testers = if stage_slugs
-            [solution_tester]
+testers = if stage_slugs.any? # Fail-fast with solutions if user is filtering by stages
+            [
+              solution_tester,
+              *dockerfile_testers.select { |tester| tester.language.slug == language_slug },
+              *starter_repo_testers.select { |tester| tester.language.slug == language_slug },
+            ]
           else
             [
               *dockerfile_testers.select { |tester| tester.language.slug == language_slug },
