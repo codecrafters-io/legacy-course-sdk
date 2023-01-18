@@ -94,6 +94,7 @@ class Language
     {
       "c" => "c",
       "clojure" => "clj",
+      "cpp" => "cpp",
       "crystal" => "cr",
       "csharp" => "cs",
       "elixir" => "ex",
