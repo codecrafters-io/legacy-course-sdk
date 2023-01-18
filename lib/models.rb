@@ -73,12 +73,10 @@ end
 class Language
   attr_reader :slug
   attr_reader :name
-  attr_reader :repo_suffix
 
-  def initialize(slug:, name:, repo_suffix:)
+  def initialize(slug:, name:)
     @slug = slug
     @name = name
-    @repo_suffix = repo_suffix
   end
 
   def self.find_by_slug!(slug)
@@ -121,6 +119,10 @@ class Language
     else
       @slug
     end
+  end
+
+  def repo_suffix
+    @slug
   end
 
   def syntax_highlighting_identifier
