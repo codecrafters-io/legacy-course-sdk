@@ -44,6 +44,14 @@ class StarterTemplateCompiler
       FileUtils.chmod(file[:mode], path)
       postprocess!(path)
     end
+
+    definition.template_attrs.each do |key, value|
+      if key.end_with?("_file")
+        unless definition.file_mappings.map(&:destination_path).include?(value)
+          raise "Template attribute #{key} references #{value}, which doesn't exist in the starter repository"
+        end
+      end
+    end
   end
 
   def definitions
