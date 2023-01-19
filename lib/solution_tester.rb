@@ -61,7 +61,7 @@ class SolutionTester < TestHarness
   def dockerfiles
     Dir["#{dockerfiles_dir}/*.Dockerfile"]
       .map { |dockerfile_path| File.basename(dockerfile_path) }
-      .select { |dockerfile_name| dockerfile_name.start_with?(language_pack) }
+      .select { |dockerfile_name| dockerfile_name.start_with?("#{language_pack}-") }
   end
 
   def language_pack
