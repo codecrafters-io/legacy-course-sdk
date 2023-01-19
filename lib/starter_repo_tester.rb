@@ -25,6 +25,10 @@ class StarterRepoTester < TestHarness
 
     assert dockerfiles.any?, "Expected a dockerfile to exist for #{slug}"
 
+    expected_yaml_language_pack = "#{language_pack}-#{latest_version}"
+    actual_yaml_language_pack = YAML.load_file("#{copied_starter_dir}/codecrafters.yml").fetch("language_pack")
+    assert expected_yaml_language_pack.eql?(actual_yaml_language_pack), "Expected .codecrafters.yml to have language_pack: #{expected_yaml_language_pack}, but found #{actual_yaml_language_pack}"
+
     log_info "Building image"
     build_image
 
