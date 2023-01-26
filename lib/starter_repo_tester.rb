@@ -99,6 +99,7 @@ class StarterRepoTester < TestHarness
 
     command = [
       "docker run",
+      "--rm",
       "-v '#{File.expand_path(tmp_dir, ENV["HOST_COURSE_SDK_PATH"])}:/app'",
       "-v '#{File.expand_path(tester_dir, ENV["HOST_COURSE_SDK_PATH"])}:/tester:ro'",
       "-v '#{File.expand_path("tests/init.sh", ENV["HOST_COURSE_SDK_PATH"])}:/init.sh:ro'",

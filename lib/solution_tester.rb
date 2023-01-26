@@ -92,6 +92,7 @@ class SolutionTester < TestHarness
 
     command = [
       "docker run",
+      "--rm",
       "--cap-add SYS_ADMIN",
       "-v '#{File.expand_path(tmp_dir, ENV["HOST_COURSE_SDK_PATH"])}:/app'",
       "-v '#{File.expand_path(tester_dir, ENV["HOST_COURSE_SDK_PATH"])}:/tester:ro'",
