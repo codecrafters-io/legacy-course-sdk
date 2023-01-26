@@ -103,11 +103,6 @@ function comment_text {
 	echo "<!-- ${marker_text} -->"
 }
 
-function find_comment {
-	curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${GITHUB_EVENT_NUMBER}/comments" |
-		jq '[.[] | select(.user.type == "Bot" and (.body | contains("'"$marker_text"'")))][:1] | .[] | .id'
-}
-
 function comment_text_current {
 	comment_text "$GITHUB_BASE_REF_SHA" "$GITHUB_REF_SHA"
 }
@@ -127,6 +122,15 @@ function curl_base {
 
 	cat >&2 "$body"
 	cat "$status" | jq -e '.response_code | . >= 200 and . < 300' > /dev/null
+}
+
+function find_comment {
+	local resp=`mktemp`
+
+	curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${GITHUB_EVENT_NUMBER}/comments" |
+		tee "$resp" |
+		jq '[.[] | select(.user.type == "Bot" and (.body | contains("'"$marker_text"'")))][:1] | .[] | .id' \
+		|| { local code=$?; echo "API response:"; cat "$resp"; exit $code; }
 }
 
 function create_comment {
