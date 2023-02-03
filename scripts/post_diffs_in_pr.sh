@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -ue
 
 marker_text="diffs_comment_marker"
@@ -86,7 +88,7 @@ function comment_text {
 				old="$base_ref:$f"
 				new="$ref:$f"
 
-				echo '`'$f'`'
+				echo '`'"$f"'`'
 
 				file_exists "$old" && collapsed_file "old content" "$old"
 				file_exists "$new" && collapsed_file "new content" "$new"
@@ -112,9 +114,9 @@ function comment_object {
 }
 
 function curl_base {
-	local request=`mktemp`
-	local body=`mktemp`
-	local status=`mktemp`
+	local body, status
+	body=`mktemp`
+	status=`mktemp`
 
 	echo >&2 curl -sv "$@"
 
@@ -125,7 +127,8 @@ function curl_base {
 }
 
 function find_comment {
-	local resp=`mktemp`
+	local resp
+	resp=`mktemp`
 
 	curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${GITHUB_EVENT_NUMBER}/comments" |
 		tee "$resp" |
@@ -163,7 +166,7 @@ function delete_comment {
 function make_comment {
 	comment_id=`find_comment`
 
-	echo workflow commit `git rev-parse HEAD`
+	echo workflow commit "`git rev-parse HEAD`"
 
 	echo git history
 	git log --pretty=oneline --graph -20
@@ -182,7 +185,11 @@ function make_comment {
 	fi
 }
 
-cd $REPO_PATH
+cd "$REPO_PATH"
+
+if test -n "${GITHUB_RUN_ATTEMPT+x}" && test "$GITHUB_RUN_ATTEMPT" -gt 1; then
+	set -x
+fi
 
 if test $# -eq 0; then
 	make_comment
