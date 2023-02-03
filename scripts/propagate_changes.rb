@@ -26,7 +26,7 @@ end
 puts "Found #{changed_files.size} changed files: \n#{changed_files.map{ |filename| "  - #{filename}"}.join("\n")}"
 puts ""
 
-affected_languages_and_stages = changed_files.map { |filename| [filename.split("/")[1], filename.split("/")[2]] }.uniq
+affected_languages_and_stages = changed_files.map { |filename| [filename.split("/")[1], filename.split("/")[2].gsub(/^\d+-/, "")] }.uniq
 
 if affected_languages_and_stages.size != 1
   puts "Can only propagate changes for one language and one stage at a time. Found: #{affected_languages_and_stages}"
@@ -34,7 +34,7 @@ if affected_languages_and_stages.size != 1
 end
 
 language_slug, changed_stage_slug = affected_languages_and_stages.first[0], affected_languages_and_stages.first[1]
-changed_stage = course.stages.find { |stage| stage.slug == changed_stage_slug }
+changed_stage = course.stages.find { |stage| stage.slug == changed_stage_slug } or raise "Could not find stage #{changed_stage_slug}"
 
 stages_to_propagate = course.stages_after(changed_stage)
 
@@ -64,7 +64,7 @@ changed_files.each do |changed_file|
     absolute_changed_file_path = File.join(course.dir, changed_file)
 
     stages_to_propagate.each do |stage|
-      file_to_change_path = File.join(course.dir, changed_file.sub(changed_stage.slug, stage.slug))
+      file_to_change_path = File.join(course.dir, changed_file.sub("#{"%02d" % changed_stage.number}-#{changed_stage.slug}", "#{"%02d" % stage.number}-#{stage.slug}"))
 
       if File.exist?(file_to_change_path)
         `diff -Naur #{absolute_changed_file_path} #{file_to_change_path} > #{base_patch_path}`

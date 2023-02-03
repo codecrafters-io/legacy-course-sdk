@@ -8,7 +8,7 @@ course_dir = ARGV[0]
 filename = ARGV[1]
 
 unless course_dir && filename
-  puts "Usage: ruby scripts/propagate_changes.rb <course-directory> <filename>"
+  puts "Usage: ruby scripts/propagate_solution_file.rb <course-directory> <filename>"
   exit 1
 end
 
