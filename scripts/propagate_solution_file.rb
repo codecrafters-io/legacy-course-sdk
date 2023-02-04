@@ -21,6 +21,8 @@ Dir.foreach(course.solutions_dir) do |language_slug|
     next if stage_number_and_slug == "." || stage_number_and_slug == ".."
     next if stage_number_and_slug == "01-#{course.first_stage.slug}"
 
+    next unless File.exists?(File.join(course.solutions_dir, language_slug, "01-#{course.first_stage.slug}", "code", filename))
+
     FileUtils.cp(
       File.join(course.solutions_dir, language_slug, "01-#{course.first_stage.slug}", "code", filename),
       File.join(course.solutions_dir, language_slug, stage_number_and_slug, "code", filename)
