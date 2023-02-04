@@ -1,6 +1,4 @@
 # Usage: ruby scripts/test.rb <course_dir> <language_slug> <stage_slugs>
-ENV["DOCKER_BUILDKIT"] = "0"
-
 require "bundler/setup"
 Bundler.setup(:default, :development)
 
