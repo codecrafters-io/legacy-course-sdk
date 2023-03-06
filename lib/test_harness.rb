@@ -47,6 +47,39 @@ class TestHarness
     false
   end
 
+  def assert_stderr_contains(command, expected_stderr, expected_exit_code = 0)
+    _, stdout_io, stderr_io, wait_thr = Open3.popen3(command)
+
+    puts ""
+
+    stdout_captured, stderr_captured = StringIO.new, StringIO.new
+    setup_io_relay(stdout_io, $stdout, stdout_captured)
+    setup_io_relay(stderr_io, $stderr, stderr_captured)
+
+    exit_code = wait_thr.value.exitstatus
+    stdout, stderr = stdout_captured.string, stderr_captured.string
+
+    puts ""
+
+    unless exit_code == expected_exit_code
+      log_error("Process exited with code #{exit_code} (expected: #{expected_exit_code})")
+      # log_error("Output: ")
+      # log_error("")
+      # log_plain_multiline(stdout) unless stdout.empty?
+      # log_plain_multiline(stderr) unless stderr.empty?
+      raise TestFailedError
+    end
+
+    unless stderr.include?(expected_stderr)
+      log_error("Expected '#{expected_stderr}' to be present.")
+      # log_error("Output found: ")
+      # log_error("")
+      # log_plain_multiline(stdout) unless stdout.empty?
+      # log_plain_multiline(stderr) unless stderr.empty?
+      raise TestFailedError
+    end
+  end
+
   def assert_stdout_contains(command, expected_stdout, expected_exit_code = 0)
     _, stdout_io, stderr_io, wait_thr = Open3.popen3(command)
 

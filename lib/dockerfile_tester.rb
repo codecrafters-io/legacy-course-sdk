@@ -44,9 +44,9 @@ class DockerfileTester < TestHarness
   end
 
   def build_image
-    assert_stdout_contains(
+    assert_stderr_contains(
       "docker build -t #{slug} -f #{dockerfile_path} #{copied_starter_dir}",
-      "Successfully tagged #{slug}"
+      "naming to docker.io/library/#{slug} done"
     )
   end
 
