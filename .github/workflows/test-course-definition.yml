@@ -32,8 +32,14 @@ jobs:
       - run: docker-compose build
       - run: docker-compose run tester ruby scripts/compile.rb courses/${{github.event.repository.name}}
 
-      - run: git -C courses/${{github.event.repository.name}} diff --exit-code # Changes to existing files
-      - run: test -z "$(git -C courses/${{github.event.repository.name}} ls-files compiled_starters/ --exclude-standard --others)" # Untracked files
+      - name: "Ensure no uncommitted changes to compiled templates"
+        run: git -C courses/${{github.event.repository.name}} diff --exit-code
+
+      - name: "Print untracked files"
+        run: git -C courses/${{github.event.repository.name}} ls-files compiled_starters/ --exclude-standard --others
+
+      - name: "Ensure untracked files are empty"
+        run: test -z "$(git -C courses/${{github.event.repository.name}} ls-files compiled_starters/ --exclude-standard --others)"
 
   markdown_lint:
     runs-on: ubuntu-latest
