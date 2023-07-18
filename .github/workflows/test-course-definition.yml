@@ -38,7 +38,7 @@ jobs:
       - name: "Print untracked files"
         run: git -C courses/${{github.event.repository.name}} ls-files compiled_starters/ --exclude-standard --others
 
-      - name: "Ensure untracked files are empty"
+      - name: "Ensure untracked files are empty (check previous step for list of files)"
         run: test -z "$(git -C courses/${{github.event.repository.name}} ls-files compiled_starters/ --exclude-standard --others)"
 
   markdown_lint:
