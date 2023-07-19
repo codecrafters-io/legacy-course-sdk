@@ -8,7 +8,7 @@ RUN apt-get install -y ruby-full
 RUN apt-get install -y git
 RUN apt-get install -y patchutils
 
-RUN curl -fsSLk get.docker.com -o /tmp/get-docker.sh && sh /tmp/get-docker.sh
+RUN curl -fsSL https://get.docker.com -o /tmp/get-docker.sh && sh /tmp/get-docker.sh
 RUN curl -sfLS install-node.vercel.app/v16.13.2 | bash -s -- --yes
 RUN gem install bundler
 
