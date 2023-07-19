@@ -19,7 +19,7 @@ Dir["#{course_dir}/compiled_starters/*"].each do |dir|
   pr_url = syncer.sync(course, repo_name, dir)
   if pr_url
     puts "PR: #{pr_url}"
-    sleep 5 if ENV["CI"] # Work around PR abuse detected warnings
+    sleep 15 if ENV["CI"] # Work around PR abuse detected warnings
   else
     puts "No changes"
   end
