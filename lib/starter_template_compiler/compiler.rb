@@ -34,7 +34,7 @@ class StarterTemplateCompiler
   private
 
   def compile_definition(definition)
-    directory = File.join(@course.compiled_starter_repositories_dir, definition.repo_name)
+    directory = definition.compiled_starter_directory
     FileUtils.rmtree(directory)
 
     definition.files(@course.dir).each do |file|

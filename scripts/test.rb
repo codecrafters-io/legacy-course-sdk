@@ -33,9 +33,11 @@ DOCKERFILE_NAMES_TO_SKIP = [
   "go-1.13.Dockerfile", # too old, not officially supported
 ]
 
-STARTER_REPO_NAMES_TO_SKIP = [
-  "redis-starter-elixir" # Temporarily disabled, triggers timeout
-]
+STARTER_LANGUAGE_SLUGS_TO_SKIP = {
+  "redis" => [
+    "elixir" # Temporarily disabled, triggers timeout
+  ]
+}[course.slug] || []
 
 dockerfile_testers = Dir["#{course_dir}/dockerfiles/*.Dockerfile"].map do |dockerfile_path|
   next if DOCKERFILE_NAMES_TO_SKIP.include?(File.basename(dockerfile_path))
@@ -44,7 +46,7 @@ dockerfile_testers = Dir["#{course_dir}/dockerfiles/*.Dockerfile"].map do |docke
 end.compact
 
 starter_repo_testers = Dir["#{course_dir}/compiled_starters/*"].map do |compiled_starter_path|
-  next if STARTER_REPO_NAMES_TO_SKIP.include?(File.basename(compiled_starter_path))
+  next if STARTER_LANGUAGE_SLUGS_TO_SKIP.include?(File.basename(compiled_starter_path))
 
   StarterRepoTester.new(
     course: course,

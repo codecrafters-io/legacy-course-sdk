@@ -37,8 +37,8 @@ class StarterRepoDefinition
     end
   end
 
-  def repo_name
-    "#{course.slug}-starter-#{language.repo_suffix}"
+  def compiled_starter_directory
+    File.join(course.compiled_starter_repositories_dir, language.slug)
   end
 
   def files(template_dir)

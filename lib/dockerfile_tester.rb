@@ -55,6 +55,6 @@ class DockerfileTester < TestHarness
   end
 
   def starter_dir
-    "#{compiled_starters_dir}/#{course.slug}-starter-#{language.slug}"
+    "#{compiled_starters_dir}/#{language.slug}"
   end
 end
