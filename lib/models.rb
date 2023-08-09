@@ -122,10 +122,6 @@ class Language
     end
   end
 
-  def repo_suffix
-    @slug
-  end
-
   def syntax_highlighting_identifier
     @slug
   end
