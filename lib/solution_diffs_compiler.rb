@@ -110,6 +110,6 @@ class SolutionDiffsCompiler
   end
 
   def starter_directory_for(language)
-    File.join(@course.compiled_starter_repositories_dir, "#{@course.slug}-starter-#{language.slug}")
+    File.join(@course.compiled_starter_repositories_dir, language.slug)
   end
 end
