@@ -14,6 +14,7 @@ gem "mdl"
 
 group :development do
   gem "pry"
+  gem "solargraph"
 end
 
 group :test do
