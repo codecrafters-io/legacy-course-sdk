@@ -15,6 +15,7 @@ gem "mdl"
 group :development do
   gem "pry"
   gem "solargraph"
+  gem "standard", ">= 1.0"
 end
 
 group :test do
