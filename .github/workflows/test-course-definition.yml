@@ -8,9 +8,14 @@ on:
         type: string
         default: main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   verify_templates_compiled:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - uses: actions/checkout@v3
@@ -43,6 +48,7 @@ jobs:
 
   markdown_lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - uses: actions/checkout@v3
@@ -66,6 +72,7 @@ jobs:
 
   go_lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - uses: actions/checkout@v3
@@ -76,6 +83,7 @@ jobs:
 
   js_lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - uses: actions/checkout@v3
@@ -99,6 +107,7 @@ jobs:
 
   rust_lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - uses: actions/checkout@v3
@@ -114,6 +123,7 @@ jobs:
 
   identify_language_slugs:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     outputs:
       language_slugs: ${{ steps.generate-language-slugs.outputs.language_slugs }}
@@ -129,6 +139,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     needs:
       - identify_language_slugs
@@ -162,6 +173,7 @@ jobs:
 
   validate-schemas:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - uses: actions/checkout@v3
@@ -186,6 +198,7 @@ jobs:
 
   validate-stages-naming:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - uses: actions/checkout@v3
