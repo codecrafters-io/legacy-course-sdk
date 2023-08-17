@@ -1,5 +1,6 @@
 require_relative "logger"
 require_relative "starter_code_uncommenter"
+require_relative "line_with_comment_remover"
 
 class StarterRepoTester < TestHarness
   include CustomLogger
@@ -40,6 +41,7 @@ class StarterRepoTester < TestHarness
     log_success "Script output verified"
 
     log_info "Uncommenting starter code..."
+
     diffs = StarterCodeUncommenter.new(copied_starter_dir, language).uncomment
     diffs.each do |diff|
       if diff.to_s.empty?
@@ -51,6 +53,16 @@ class StarterRepoTester < TestHarness
       puts ""
       puts diff.to_s(:color)
       puts ""
+    end
+
+    diffs = LineWithCommentRemover.new(copied_starter_dir, language).process!
+    diffs.each do |diff|
+      if diff.to_s.empty?
+        log_error("Expected removing logger line to return a diff")
+        log_error("Are you sure there's a line that matches #{LineWithCommentRemover::LINE_MARKER_PATTERN.inspect} in any of these files: #{LineWithCommentRemover.new(copied_starter_dir, language).code_files}?")
+
+        return
+      end
     end
 
     log_info "Executing starter repo script with first stage uncommented"
