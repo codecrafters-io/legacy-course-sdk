@@ -23,12 +23,12 @@ jobs:
         with:
           path: courses/${{github.event.repository.name}}
 
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-        with:
-          key: v4-template-compilation-{hash}
-          restore-keys: |
-            v4-template-compilation-
+      # - uses: satackey/action-docker-layer-caching@v0.0.11
+      #   continue-on-error: true
+      #   with:
+      #     key: v4-template-compilation-{hash}
+      #     restore-keys: |
+      #       v4-template-compilation-
 
       - run: docker-compose build
       - run: docker-compose run tester ruby scripts/compile.rb courses/${{github.event.repository.name}}
@@ -56,12 +56,12 @@ jobs:
         with:
           path: courses/${{github.event.repository.name}}
 
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-        with:
-          key: v4-md-lint-{hash}
-          restore-keys: |
-            v4-md-lint-
+      # - uses: satackey/action-docker-layer-caching@v0.0.11
+      #   continue-on-error: true
+      #   with:
+      #     key: v4-md-lint-{hash}
+      #     restore-keys: |
+      #       v4-md-lint-
 
       - run: docker-compose build
       - run: docker-compose run tester mdl --style relaxed courses/${{github.event.repository.name}}/compiled_starters
@@ -91,12 +91,12 @@ jobs:
         with:
           path: courses/${{github.event.repository.name}}
 
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-        with:
-          key: v4-js-lint-{hash}
-          restore-keys: |
-            v4-js-lint-
+      # - uses: satackey/action-docker-layer-caching@v0.0.11
+      #   continue-on-error: true
+      #   with:
+      #     key: v4-js-lint-{hash}
+      #     restore-keys: |
+      #       v4-js-lint-
 
       - run: docker-compose build
       - run: docker-compose run tester prettier --no-error-on-unmatched-pattern --check courses/${{github.event.repository.name}}/**/*.js
@@ -185,12 +185,12 @@ jobs:
         with:
           path: courses/${{github.event.repository.name}}
 
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-        with:
-          key: v4-validate-schemas-{hash}
-          restore-keys: |
-            v4-validate-schemas-
+      # - uses: satackey/action-docker-layer-caching@v0.0.11
+      #   continue-on-error: true
+      #   with:
+      #     key: v4-validate-schemas-{hash}
+      #     restore-keys: |
+      #       v4-validate-schemas-
 
       - run: docker-compose build
       - run: docker-compose run tester ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/${{github.event.repository.name}}/course-definition.yml
