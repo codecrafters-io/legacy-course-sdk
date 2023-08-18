@@ -137,10 +137,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
-    concurrency:
-      group: test-${{ github.workflow }}-${{ github.ref }}-${{ matrix.language }}
-      cancel-in-progress: true
-
     needs:
       - identify_language_slugs
 
