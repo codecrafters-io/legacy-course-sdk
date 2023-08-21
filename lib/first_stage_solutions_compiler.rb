@@ -22,7 +22,7 @@ class FirstStageSolutionsCompiler
   end
 
   def compile_for_starter_repository_directory(starter_repository_directory)
-    language = Language.find_by_slug!(File.basename(starter_repository_directory).split("-").last)
+    language = Language.find_by_slug!(File.basename(starter_repository_directory))
     code_directory = File.join(@course.solutions_dir, language.slug, @course.first_stage.solution_dir, "code")
 
     FileUtils.rm_rf(code_directory) if File.exist?(code_directory)
@@ -54,6 +54,6 @@ class FirstStageSolutionsCompiler
   end
 
   def starter_repository_directories
-    Dir.glob(File.join(@course.compiled_starter_repositories_dir, "#{@course.slug}-starter-*"))
+    Dir.glob(File.join(@course.compiled_starter_repositories_dir, "*"))
   end
 end
