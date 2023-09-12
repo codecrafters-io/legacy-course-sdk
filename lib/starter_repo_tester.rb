@@ -102,7 +102,7 @@ class StarterRepoTester < TestHarness
   def build_image
     assert_stderr_contains(
       "docker build -t #{slug} -f #{dockerfile_path} #{copied_starter_dir}",
-      "naming to docker.io/library/#{slug} done"
+      "naming to docker.io/library/#{slug}"
     )
   end
 

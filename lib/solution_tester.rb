@@ -79,7 +79,7 @@ class SolutionTester < TestHarness
   def build_image(stage)
     assert_stderr_contains(
       "docker build -t #{slug} -f #{dockerfile_path} #{solution_code_dir_for_stage(stage)}",
-      "naming to docker.io/library/#{slug} done"
+      "naming to docker.io/library/#{slug}"
     )
   end
 
