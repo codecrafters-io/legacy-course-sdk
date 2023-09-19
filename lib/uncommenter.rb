@@ -21,6 +21,7 @@ class Uncommenter
     "ruby" => POUND_SIGN,
     "rust" => DOUBLE_SLASHES,
     "swift" => DOUBLE_SLASHES,
+    "zig" => DOUBLE_SLASHES
   }
 
   attr_reader :language_slug, :code, :uncomment_marker_pattern

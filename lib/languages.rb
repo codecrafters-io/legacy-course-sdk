@@ -16,4 +16,5 @@ LANGUAGES = [
   Language.new(slug: "ruby", name: "Ruby"),
   Language.new(slug: "rust", name: "Rust"),
   Language.new(slug: "swift", name: "Swift"),
+  Language.new(slug: "zig", name: "Zig")
 ]
