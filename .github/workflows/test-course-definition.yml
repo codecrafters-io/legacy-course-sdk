@@ -27,7 +27,7 @@ jobs:
       #   continue-on-error: true
       #   with:
       #     key: v4-template-compilation-{hash}
-      #     restore-keys: |
+      #     restore-keys: |-
       #       v4-template-compilation-
 
       - run: docker-compose build
@@ -60,7 +60,7 @@ jobs:
       #   continue-on-error: true
       #   with:
       #     key: v4-md-lint-{hash}
-      #     restore-keys: |
+      #     restore-keys: |-
       #       v4-md-lint-
 
       - run: docker-compose build
@@ -95,7 +95,7 @@ jobs:
       #   continue-on-error: true
       #   with:
       #     key: v4-js-lint-{hash}
-      #     restore-keys: |
+      #     restore-keys: |-
       #       v4-js-lint-
 
       - run: docker-compose build
@@ -129,7 +129,7 @@ jobs:
 
       - name: Generate Language Slugs
         id: generate-language-slugs
-        run: |
+        run: |-
           LANGUAGE_SLUGS=$(ls solutions | jq -Rnc '[inputs]')
           echo ::set-output name=language_slugs::${LANGUAGE_SLUGS}
 
@@ -160,7 +160,7 @@ jobs:
 #        continue-on-error: true
 #        with:
 #          key: v3-test-${{matrix.language}}-{hash}
-#          restore-keys: |
+#          restore-keys: |-
 #            v3-test-${{matrix.language}}-
 #
       - run: docker-compose build
@@ -185,7 +185,7 @@ jobs:
       #   continue-on-error: true
       #   with:
       #     key: v4-validate-schemas-{hash}
-      #     restore-keys: |
+      #     restore-keys: |-
       #       v4-validate-schemas-
 
       - run: docker-compose build

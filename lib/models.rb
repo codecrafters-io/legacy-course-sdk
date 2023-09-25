@@ -108,7 +108,8 @@ class Language
       "python" => "py",
       "ruby" => "rb",
       "rust" => "rs",
-      "swift" => "swift"
+      "swift" => "swift",
+      "zig" => "zig"
     }.fetch(@slug)
   end
 
