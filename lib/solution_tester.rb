@@ -99,7 +99,8 @@ class SolutionTester < TestHarness
       "-v '#{File.expand_path("tests/init.sh", ENV["HOST_COURSE_SDK_PATH"])}:/init.sh:ro'",
       "-e CODECRAFTERS_SUBMISSION_DIR=/app",
       "-e CODECRAFTERS_COURSE_PAGE_URL=http://test-app.codecrafters.io/url",
-      "-e CODECRAFTERS_CURRENT_STAGE_SLUG=#{stage.slug}",
+      "-e CODECRAFTERS_TEST_CASES_JSON='[#{stage.tester_test_case_json}]'",
+      "-e CODECRAFTERS_CURRENT_STAGE_SLUG=#{stage.slug}", # TODO: Remove this
       "-e TESTER_DIR=/tester",
       "-w /app",
       "--memory=2g",
