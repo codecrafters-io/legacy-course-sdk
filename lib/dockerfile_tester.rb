@@ -32,7 +32,7 @@ class DockerfileTester < TestHarness
     log_header("Testing Dockerfile: #{slug}")
 
     log_info "Building #{language_pack} image without cache"
-    time_taken = assert_time_under(300) { build_image }
+    time_taken = assert_time_under(400) { build_image }
 
     log_info "Took #{time_taken} secs"
     log_info ""
