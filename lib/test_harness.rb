@@ -53,10 +53,16 @@ class TestHarness
     puts ""
 
     stdout_captured, stderr_captured = StringIO.new, StringIO.new
-    setup_io_relay(stdout_io, $stdout, stdout_captured)
-    setup_io_relay(stderr_io, $stderr, stderr_captured)
+    stdout_thread = Thread.new do
+      setup_io_relay(stdout_io, $stdout, stdout_captured)
+    end
+    stderr_thread = Thread.new do
+      setup_io_relay(stderr_io, $stderr, stderr_captured)
+    end
 
     exit_code = wait_thr.value.exitstatus
+    stdout_thread.join
+    stderr_thread.join
     stdout, stderr = stdout_captured.string, stderr_captured.string
 
     puts ""

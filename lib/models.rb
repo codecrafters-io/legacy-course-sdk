@@ -14,6 +14,14 @@ class CourseStage
   def solution_dir
     "%02d-%s" % [@number, @slug]
   end
+
+  def tester_test_case_json
+    {
+      slug: slug,
+      tester_log_prefix: "stage-#{@number}",
+      title: "Stage #{@number}: #{@name}"
+    }.to_json
+  end
 end
 
 class Course

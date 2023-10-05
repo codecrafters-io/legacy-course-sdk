@@ -4,10 +4,16 @@ require "yaml"
 class FileMapping
   attr_reader :destination_path
   attr_reader :template_path
+  attr_reader :should_skip_template_interpolation
 
-  def initialize(destination_path, template_path)
+  def initialize(destination_path, template_path, should_skip_template_interpolation)
     @destination_path = destination_path
     @template_path = template_path
+    @should_skip_template_interpolation = should_skip_template_interpolation
+  end
+
+  def should_skip_template_interpolation?
+    @should_skip_template_interpolation
   end
 end
 
@@ -30,7 +36,13 @@ class StarterRepoDefinition
     starter_definitions_yaml.map do |starter_definition_yaml|
       StarterRepoDefinition.new(
         course: course,
-        file_mappings: starter_definition_yaml.fetch("file_mappings").map { |fm| FileMapping.new(fm.fetch("target"), fm.fetch("source")) },
+        file_mappings: starter_definition_yaml.fetch("file_mappings").map { |fm|
+          FileMapping.new(
+            fm.fetch("target"),
+            fm.fetch("source"),
+            fm.fetch("should_skip_template_evaluation", false)
+          )
+        },
         language: LANGUAGES.detect { |language| language.slug == starter_definition_yaml.fetch("language") },
         template_attrs: starter_definition_yaml.fetch("template_attributes")
       )
@@ -45,9 +57,10 @@ class StarterRepoDefinition
     @file_mappings.map do |mapping|
       fpath = File.join(template_dir, mapping.template_path)
       template_contents = File.read(fpath)
+
       {
         path: mapping.destination_path,
-        contents: Mustache.render(template_contents, template_context),
+        contents: mapping.should_skip_template_interpolation? ? template_contents : Mustache.render(template_contents, template_context),
         mode: File.stat(fpath).mode
       }
     end

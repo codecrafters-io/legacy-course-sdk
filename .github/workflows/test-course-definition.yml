@@ -170,7 +170,7 @@ jobs:
       contents: read
       id-token: write
 
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     needs:
       - identify_language_slugs
