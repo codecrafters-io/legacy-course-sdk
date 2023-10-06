@@ -43,7 +43,6 @@ jobs:
           load: true
           tags: tester:depot
 
-      - run: docker-compose pull
       - run: docker-compose run tester ruby scripts/compile.rb courses/${{github.event.repository.name}}
 
       - name: "Ensure no uncommitted changes to compiled templates"
@@ -89,7 +88,6 @@ jobs:
           load: true
           tags: tester:depot
 
-      - run: docker-compose pull
       - run: docker-compose run tester mdl --style relaxed courses/${{github.event.repository.name}}/compiled_starters
 
   go_lint:
@@ -137,7 +135,6 @@ jobs:
           load: true
           tags: tester:depot
           
-      - run: docker-compose pull
       - run: docker-compose run tester prettier --no-error-on-unmatched-pattern --check courses/${{github.event.repository.name}}/**/*.js
 
   rust_lint:
@@ -215,7 +212,6 @@ jobs:
           load: true
           tags: tester:depot
 
-      - run: docker-compose pull
       - run: docker-compose run -e GITHUB_TOKEN=${{github.token}} tester ruby scripts/test.rb courses/${{github.event.repository.name}} ${{matrix.language}} --no-build
 
 
@@ -253,7 +249,6 @@ jobs:
           load: true
           tags: tester:depot
 
-      - run: docker-compose pull
       - run: docker-compose run tester ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/${{github.event.repository.name}}/course-definition.yml
       - run: docker-compose run tester sh -c "ls courses/${{github.event.repository.name}}/solutions/*/*/definition.yml | xargs -P8 -n 1 ajv validate --spec draft2020 -s schemas/course-stage-solution-definition.json -d"
 
