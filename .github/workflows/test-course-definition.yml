@@ -41,7 +41,7 @@ jobs:
           project: tsp80qbtxw
           context: .
           load: true
-          tags: app:latest
+          tags: tester:depot
 
       - run: docker-compose run tester ruby scripts/compile.rb courses/${{github.event.repository.name}}
 
@@ -86,7 +86,7 @@ jobs:
           project: tsp80qbtxw
           context: .
           load: true
-          tags: app:latest
+          tags: tester:depot
 
       - run: docker-compose run tester mdl --style relaxed courses/${{github.event.repository.name}}/compiled_starters
 
@@ -133,7 +133,7 @@ jobs:
           project: tsp80qbtxw
           context: .
           load: true
-          tags: app:latest
+          tags: tester:depot
           
       - run: docker-compose run tester prettier --no-error-on-unmatched-pattern --check courses/${{github.event.repository.name}}/**/*.js
 
@@ -210,7 +210,7 @@ jobs:
           project: tsp80qbtxw
           context: .
           load: true
-          tags: app:latest
+          tags: tester:depot
 
       - run: docker-compose run -e GITHUB_TOKEN=${{github.token}} tester ruby scripts/test.rb courses/${{github.event.repository.name}} ${{matrix.language}} --no-build
 
