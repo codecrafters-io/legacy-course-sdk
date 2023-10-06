@@ -247,6 +247,7 @@ jobs:
           project: tsp80qbtxw
           context: .
           load: true
+          tags: tester:depot
 
       - run: docker-compose run tester ajv validate --spec draft2020 -s schemas/course-definition.json -d courses/${{github.event.repository.name}}/course-definition.yml
       - run: docker-compose run tester sh -c "ls courses/${{github.event.repository.name}}/solutions/*/*/definition.yml | xargs -P8 -n 1 ajv validate --spec draft2020 -s schemas/course-stage-solution-definition.json -d"
