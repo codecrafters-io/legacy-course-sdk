@@ -3,6 +3,9 @@ version: '3'
 services:
   tester:
     image: tester:depot
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       HOST_COURSE_SDK_PATH: "${PWD}"
     volumes:
