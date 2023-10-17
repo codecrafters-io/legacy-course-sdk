@@ -37,7 +37,6 @@ jobs:
 
       - uses: depot/setup-action@v1
       - uses: depot/build-push-action@v1
-        continue-on-error: true
         with:
           project: tsp80qbtxw
           context: .
@@ -83,7 +82,6 @@ jobs:
 
       - uses: depot/setup-action@v1
       - uses: depot/build-push-action@v1
-        continue-on-error: true
         with:
           project: tsp80qbtxw
           context: .
@@ -131,7 +129,6 @@ jobs:
 
       - uses: depot/setup-action@v1
       - uses: depot/build-push-action@v1
-        continue-on-error: true
         with:
           project: tsp80qbtxw
           context: .
@@ -209,7 +206,6 @@ jobs:
 #
       - uses: depot/setup-action@v1
       - uses: depot/build-push-action@v1
-        continue-on-error: true
         with:
           project: tsp80qbtxw
           context: .
@@ -247,7 +243,6 @@ jobs:
 
       - uses: depot/setup-action@v1
       - uses: depot/build-push-action@v1
-        continue-on-error: true
         with:
           project: tsp80qbtxw
           context: .
