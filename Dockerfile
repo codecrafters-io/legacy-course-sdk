@@ -8,8 +8,13 @@ RUN apt-get install -y make
 RUN apt-get install -y ruby-full
 RUN apt-get install -y git
 RUN apt-get install -y patchutils
+RUN apt-get install -y ca-certificates
+RUN apt-get install -y gnupg
 
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+RUN mkdir -p /etc/apt/keyrings
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+RUN apt-get update
 RUN apt-get install -y nodejs
 
 RUN curl -fsSL https://get.docker.com -o /tmp/get-docker.sh && sh /tmp/get-docker.sh
