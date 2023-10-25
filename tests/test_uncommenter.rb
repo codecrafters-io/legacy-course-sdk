@@ -125,6 +125,30 @@ public static void main(String[] args) {
 }
 "
 
+SAMPLE_KOTLIN_COMMENTED = "
+fun main(args: Array<String>) {
+  // Uncomment this to pass the first stage
+  //
+  // // This is an assignment
+  // val a = 1;
+  //
+  // println('Hey');
+
+  val b = 2;
+}
+"
+
+SAMPLE_KOTLIN_UNCOMMENTED = "
+fun main(args: Array<String>) {
+  // This is an assignment
+  val a = 1;
+
+  println('Hey');
+
+  val b = 2;
+}
+"
+
 SAMPLE_PHP_COMMENTED = "
 <?php
 // Uncomment this to pass the first stage.
@@ -225,6 +249,18 @@ class TestUncommenter < Minitest::Test
     assert_equal expected, actual
   end
 
+  def test_kotlin
+    actual = Uncommenter.new("kotlin", SAMPLE_KOTLIN_COMMENTED, UNCOMMENT_PATTERN).uncommented
+    expected = SAMPLE_KOTLIN_UNCOMMENTED
+    assert_equal expected, actual
+  end
+
+  def test_twice_kotlin
+    actual = Uncommenter.new("kotlin", SAMPLE_KOTLIN_UNCOMMENTED, UNCOMMENT_PATTERN).uncommented
+    expected = SAMPLE_KOTLIN_UNCOMMENTED
+    assert_equal expected, actual
+  end
+    
   def test_php
     actual = Uncommenter.new("php", SAMPLE_PHP_COMMENTED, UNCOMMENT_PATTERN).uncommented
     expected = SAMPLE_PHP_UNCOMMENTED
