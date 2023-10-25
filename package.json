@@ -2,5 +2,10 @@
   "dependencies": {
     "prettier": "^2.7.1",
     "ajv-cli" : "^5.0.0"
+  },
+  "scripts": {
+    "lint:md": "prettier --prose-wrap=\"always\" --write \"courses/**/*.md\"",
+    "lint:js": "prettier --write \"courses/**/*.js\"",
+    "lint": "npm run lint:md && npm run lint:js"
   }
 }
