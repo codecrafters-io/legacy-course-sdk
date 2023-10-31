@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "prettier": "^2.7.1",
-    "ajv-cli" : "^5.0.0"
+    "ajv-cli": "^5.0.0",
+    "prettier": "^3.0.3"
   },
   "scripts": {
     "lint:md": "prettier --prose-wrap=\"always\" --write \"courses/**/*.md\"",
