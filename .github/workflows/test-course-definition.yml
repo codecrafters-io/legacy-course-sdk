@@ -135,7 +135,7 @@ jobs:
           load: true
           tags: tester:depot
           
-      - run: docker-compose run tester prettier --write --ignore-path ./.prettierignore --no-error-on-unmatched-pattern --check courses/${{github.event.repository.name}}/**/*.js
+      - run: docker-compose run tester prettier --ignore-path ./.prettierignore --no-error-on-unmatched-pattern --check courses/${{github.event.repository.name}}/**/*.js
 
   rust_lint:
     runs-on: ubuntu-latest
