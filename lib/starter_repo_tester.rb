@@ -19,7 +19,6 @@ class StarterRepoTester < TestHarness
     @copied_starter_dir ||= Dir.mktmpdir.tap { |x| FileUtils.rmdir(x) }
   end
 
-
   def do_test
     FileUtils.cp_r(starter_dir, copied_starter_dir)
 
