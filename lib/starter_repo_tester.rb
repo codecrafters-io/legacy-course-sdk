@@ -19,6 +19,7 @@ class StarterRepoTester < TestHarness
     @copied_starter_dir ||= Dir.mktmpdir.tap { |x| FileUtils.rmdir(x) }
   end
 
+
   def do_test
     FileUtils.cp_r(starter_dir, copied_starter_dir)
 
@@ -40,20 +41,7 @@ class StarterRepoTester < TestHarness
 
     log_success "Script output verified"
 
-    log_info "Checking if there are no uncommitted changes to compiled templates"
-
-    diff_command = "git -C #{starter_dir} diff --exit-code"
-    output = `#{diff_command}`
-    exit_status = $?.exitstatus
-
-    if exit_status != 0
-      puts "There are uncommitted changes to compiled templates in #{starter_dir}."
-      puts output
-      log_error "Please commit these changes and try again."
-      return
-    else
-      log_success "No uncommitted changes to compiled templates found."
-    end
+    verify_uncommitted_changes
 
     log_info "Uncommenting starter code..."
 
@@ -86,6 +74,23 @@ class StarterRepoTester < TestHarness
     }
 
     log_success "Took #{time_taken} secs"
+  end
+
+  def verify_uncommitted_changes
+    log_info "Checking if there are no uncommitted changes to compiled templates"
+
+    diff_command = "git -C #{starter_dir} diff --exit-code"
+    diff = `#{diff_command}`
+    exit_status = $?.exitstatus
+
+    if exit_status != 0
+      log_info "There are uncommitted changes to compiled templates in #{starter_dir}:"
+      log_info diff
+      log_error "Please commit these changes and try again."
+      return
+    else
+      log_success "No uncommitted changes to compiled templates found."
+    end
   end
 
   def dockerfile_path
