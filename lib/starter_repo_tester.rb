@@ -42,6 +42,7 @@ class StarterRepoTester < TestHarness
     log_success "Script output verified"
 
     verify_uncommitted_changes
+    verify_untracked_changes
 
     log_info "Uncommenting starter code..."
 
@@ -90,6 +91,22 @@ class StarterRepoTester < TestHarness
       return
     else
       log_success "No uncommitted changes to compiled templates found."
+    end
+  end
+
+  def verify_untracked_changes
+    log_info "Checking if there are no untracked changes to compiled templates"
+
+    list_untracked_files_command = "git -C #{starter_dir} ls-files --others --exclude-standard"
+    untracked_files = `#{list_untracked_files_command}`
+
+    if untracked_files.empty?
+      log_success "No untracked changes to compiled templates found."
+    else
+      log_info "There are untracked changes to compiled templates in #{starter_dir}:"
+      log_info untracked_files
+      log_error "Please track these changes and try again."
+      return
     end
   end
 
