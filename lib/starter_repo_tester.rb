@@ -40,6 +40,21 @@ class StarterRepoTester < TestHarness
 
     log_success "Script output verified"
 
+    log_info "Checking if there are no uncommitted changes to compiled templates"
+
+    diff_command = "git -C #{starter_dir} diff --exit-code"
+    output = `#{diff_command}`
+    exit_status = $?.exitstatus
+
+    if exit_status != 0
+      puts "There are uncommitted changes to compiled templates in #{starter_dir}."
+      puts output
+      log_error "Please commit these changes and try again."
+      return
+    else
+      log_success "No uncommitted changes to compiled templates found."
+    end
+
     log_info "Uncommenting starter code..."
 
     diffs = StarterCodeUncommenter.new(copied_starter_dir, language).uncomment
