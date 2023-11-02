@@ -34,7 +34,10 @@ class StarterRepoTester < TestHarness
     build_image
 
     log_info "Executing starter repo script"
-    assert_time_under(20) {
+
+
+    # Precompilation can take a while on GitHub runners, so let's give this 60s
+    assert_time_under(60) {
       assert_script_output("Logs from your program will appear here", expected_exit_code = 1)
     }
 
@@ -66,7 +69,9 @@ class StarterRepoTester < TestHarness
     end
 
     log_info "Executing starter repo script with first stage uncommented"
-    time_taken = assert_time_under(20) {
+
+    # Precompilation can take a while on GitHub runners, so let's give this 60s
+    time_taken = assert_time_under(60) {
       assert_script_output("Test passed.")
     }
 
