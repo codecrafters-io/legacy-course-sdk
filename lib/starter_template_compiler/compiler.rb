@@ -59,6 +59,7 @@ class StarterTemplateCompiler
   end
 
   def postprocess!(filepath)
+    POSTPROCESSORS["md"].call(filepath) if filepath.end_with?(".md")
     POSTPROCESSORS["js"].call(filepath) if filepath.end_with?(".js")
   end
 end
