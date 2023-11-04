@@ -45,6 +45,9 @@ class StarterRepoTester < TestHarness
 
     log_info "Checking if there are no uncommitted changes to compiled templates"
 
+    ensure_safe_directory_command = "git config --global --add safe.directory #{starter_dir}"
+    ensure_safe_directory = `#{ensure_safe_directory_command}`
+
     diff_command = "git -C #{starter_dir} diff --exit-code"
     diff = `#{diff_command}`
 
