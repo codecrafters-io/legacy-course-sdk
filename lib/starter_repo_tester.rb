@@ -43,6 +43,9 @@ class StarterRepoTester < TestHarness
 
     log_success "Script output verified"
 
+    verify_uncommitted_changes
+    verify_untracked_changes
+
     log_info "Uncommenting starter code..."
 
     diffs = StarterCodeUncommenter.new(copied_starter_dir, language).uncomment
@@ -76,6 +79,39 @@ class StarterRepoTester < TestHarness
     }
 
     log_success "Took #{time_taken} secs"
+  end
+
+  def verify_uncommitted_changes
+    log_info "Checking if there are no uncommitted changes to compiled templates"
+
+    diff_command = "git -C #{starter_dir} diff --exit-code"
+    diff = `#{diff_command}`
+    exit_status = $?.exitstatus
+
+    if exit_status != 0
+      log_info "There are uncommitted changes to compiled templates in #{starter_dir}:"
+      log_info diff
+      log_error "Please commit these changes and try again."
+      return
+    else
+      log_success "No uncommitted changes to compiled templates found."
+    end
+  end
+
+  def verify_untracked_changes
+    log_info "Checking if there are no untracked changes to compiled templates"
+
+    list_untracked_files_command = "git -C #{starter_dir} ls-files --others --exclude-standard"
+    untracked_files = `#{list_untracked_files_command}`
+
+    if untracked_files.empty?
+      log_success "No untracked changes to compiled templates found."
+    else
+      log_info "There are untracked changes to compiled templates in #{starter_dir}:"
+      log_info untracked_files
+      log_error "Please track these changes and try again."
+      return
+    end
   end
 
   def dockerfile_path
