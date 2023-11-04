@@ -7,8 +7,8 @@ require_relative "../languages"
 
 class StarterTemplateCompiler
   POSTPROCESSORS = {
-    "md" => proc { |filepath| `mdl --style relaxed #{filepath}` },
-    "js" => proc { |filepath| `prettier --write #{filepath}` }
+    "md" => proc { |filepath| `prettier --prose-wrap="always" --write --ignore-path ./.prettierignore #{filepath}` },
+    "js" => proc { |filepath| `prettier --write --ignore-path ./.prettierignore #{filepath}` }
   }
 
   def initialize(course:)
