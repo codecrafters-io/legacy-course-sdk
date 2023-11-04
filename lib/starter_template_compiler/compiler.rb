@@ -7,7 +7,7 @@ require_relative "../languages"
 
 class StarterTemplateCompiler
   POSTPROCESSORS = {
-    "md" => proc { |filepath| `prettier --prose-wrap="always" --write #{filepath}` },
+    "md" => proc { |filepath| `mdl --style relaxed #{filepath}` },
     "js" => proc { |filepath| `prettier --write #{filepath}` }
   }
 
