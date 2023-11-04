@@ -7,7 +7,7 @@ require_relative "../languages"
 
 class StarterTemplateCompiler
   POSTPROCESSORS = {
-    "md" => proc { |filepath| `prettier --prose-wrap="always" --write #{filepath}` },
+    "md" => proc { |filepath| `mdl --style relaxed #{filepath}` },
     "js" => proc { |filepath| `prettier --write #{filepath}` }
   }
 
@@ -59,7 +59,6 @@ class StarterTemplateCompiler
   end
 
   def postprocess!(filepath)
-    POSTPROCESSORS["md"].call(filepath) if filepath.end_with?(".md")
     POSTPROCESSORS["js"].call(filepath) if filepath.end_with?(".js")
   end
 end
