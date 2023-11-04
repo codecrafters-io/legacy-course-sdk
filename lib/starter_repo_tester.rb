@@ -47,16 +47,15 @@ class StarterRepoTester < TestHarness
 
     diff_command = "git -C #{starter_dir} diff --exit-code"
     diff = `#{diff_command}`
-    exit_status = $?.exitstatus
 
-    if exit_status != 0
+    if diff.empty?
+      log_success "No uncommitted changes to compiled templates found."
+    else
       log_info "There are uncommitted changes to compiled templates in #{starter_dir}:"
       log_info diff
       log_error "Please commit these changes and try again."
 
       raise TestFailedError
-    else
-      log_success "No uncommitted changes to compiled templates found."
     end
 
     log_info "Checking if there are no untracked changes to compiled templates"
