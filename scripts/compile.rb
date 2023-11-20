@@ -1,7 +1,6 @@
 # Usage: ruby scripts/compile.rb <course_dir> <language_slug>
 require_relative "../lib/starter_template_compiler/compiler"
 require_relative "../lib/solution_diffs_compiler"
-require_relative "../lib/solution_definitions_compiler"
 require_relative "../lib/first_stage_solutions_compiler"
 require_relative "../lib/first_stage_explanations_compiler"
 require_relative "../lib/models"
@@ -21,7 +20,6 @@ compilers = [
   FirstStageSolutionsCompiler.new(course: course),
   FirstStageExplanationsCompiler.new(course: course),
   SolutionDiffsCompiler.new(course: course),
-  SolutionDefinitionsCompiler.new(course: course)
 ]
 
 if language_filter
