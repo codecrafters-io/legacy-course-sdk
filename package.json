@@ -3,9 +3,6 @@
     "ajv-cli": "^5.0.0",
     "prettier": "^3.0.3"
   },
-  "prettier": {
-    "trailingComma": "none"
-  },
   "scripts": {
     "lint:md": "prettier --prose-wrap=\"always\" --write \"courses/**/*.md\"",
     "lint:js": "prettier --write --ignore-path \"./.prettierignore\" --no-error-on-unmatched-pattern --check \"courses/**/*.js\"",
